@@ -1,12 +1,10 @@
-import LoadingScreen  from "@ui/loading-screen/LoadingScreen";
+import { Redirect } from "expo-router";
 
+/**
+ * Root entry.
+ *
+ * Always start with loading screen.
+ */
 export default function Index() {
-  return (
-    <LoadingScreen
-      progress={25}
-      loadingText="Scanning media…"
-      logoSource={require("../assets/logo.png")}
-      logoSize={500}
-    />
-  );
+  return <Redirect href="/components/loading/Loading" />;
 }
