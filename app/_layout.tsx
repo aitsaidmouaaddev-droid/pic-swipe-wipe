@@ -1,5 +1,6 @@
 import { Slot } from "expo-router";
 import { ThemeProvider } from "@themes/ThemeContext";
+import { View } from "react-native";
 
 /**
  * Root layout for the whole app.
@@ -11,7 +12,9 @@ import { ThemeProvider } from "@themes/ThemeContext";
 export default function Layout() {
   return (
     <ThemeProvider>
-      <Slot />
+      <View style={{ flex: 1, borderRadius: 0, overflow: "visible" }}>
+        <Slot />
+      </View>
     </ThemeProvider>
   );
 }
