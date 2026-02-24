@@ -2,6 +2,7 @@
 // Any theme (dark, light, custom) must follow this shape.
 export interface ThemeTokens {
   colors: {
+    danger: string;
     background: string;
     text: string;
     mutedText: string;

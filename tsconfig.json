@@ -3,8 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@styles/*": ["./styles/*"],
+      "@mocks/*": ["./mocks/*"],
       "@themes/*": ["./styles/themes/*"],
+      "@styles/*": ["./styles/*"],
+      "@store/*": ["./app/store/*"],
       "@ui/*": ["./app/ui/*"],
       "@/*": [
         "./*"

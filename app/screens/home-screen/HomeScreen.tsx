@@ -1,59 +1,97 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
-import { useTheme } from "@themes/ThemeContext";
-import  CardsDeck from "@ui/cards-deck/CardsDeck";
+import React from "react";
+import { View, Text, Image } from "react-native";
+import CardsDeck from "@ui/cards-deck/CardsDeck";
+import { useAppDispatch, useAppSelector } from "@store/hooks";
+import { mediaScanActions } from "@store/mediaScanSlice";
+import { selectFrontItem, selectBackItem } from "@store/mediaSelectors";
 
 /**
- * Home screen (tab content).
- * Later: Tinder-style swipe deck will be implemented here.
+ * HomeScreen Component
+ * * The primary view for the application's "Swipe to Wipe" functionality.
+ * It connects to the Redux store to display a deck of media assets (photos/videos)
+ * and handles navigation through the media library via swipe gestures.
+ * * @component
+ * @example
+ * return (
+ * <HomeScreen />
+ * )
  */
 export default function HomeScreen() {
-  const { theme } = useTheme();
-  const items = Array.from({ length: 50 }, (_, i) => ({
-    id: (i + 1).toString(),
-    label: "Screen " + (i + 1),
-    background: i % 2 === 0 ? "blue" : "yellow",
-  }));
-  const [index, setIndex] = useState(0);
+  const dispatch = useAppDispatch();
 
-  const n = items.length;
+  /** * The media item currently being displayed on top of the stack.
+   * @type {MediaItem | null} 
+   */
+  const frontItem = useAppSelector(selectFrontItem);
 
-  const nextIndex = (i: number) => (i + 1) % n;
+  /** * The next media item in the queue, rendered behind the front item 
+   * to ensure smooth transitions during swiping.
+   * @type {MediaItem | null} 
+   */
+  const backItem = useAppSelector(selectBackItem);
 
-  const frontItem = items[index];
-  const backItem = items[nextIndex(index)];
+  /**
+   * Internal helper to handle the conditional rendering of media types.
+   * * @param {any} item - The MediaItem object to render.
+   * @param {string} label - Debug label identifying if the item is "FRONT" or "BACK".
+   * @returns {JSX.Element} A View containing either an Image or a Video placeholder.
+   */
+  const render = (item: any, label: string) => {
+    if (item.type === "photo") {
+      return (
+        <Image
+          source={{ uri: item.uri }}
+          style={{ flex: 1 }}
+          resizeMode="cover"
+        />
+      );
+    }
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>{label} VIDEO</Text>
+        <Text>{item.name}</Text>
+      </View>
+    );
+  };
 
+  // Render Empty State
+  if (!frontItem || !backItem) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>No items yet. Run scan.</Text>
+      </View>
+    );
+  }
 
   return (
-    <View style={{ flex: 1, borderRadius: 0 }}>
+    <View style={{ flex: 1 }}>
       <CardsDeck
+        /** * The key is tied to frontItem.id to ensure the component 
+         * re-mounts/resets internal animation states when the item changes.
+         */
         key={frontItem.id}
         containerStyle={{ flex: 1 }}
         cardStyle={{ borderRadius: 0 }}
         frontItem={frontItem}
         backItem={backItem}
         overlayMaxOpacity={0.4}
-        renderFront={(item) => (
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: item.background }}>
-            <Text>FRONT: {item.label}</Text>
-          </View>
-        )}
-        renderBack={(item) => (
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: item.background }}>
-            <Text>BACK: {item.label}</Text>
-          </View>
-        )}
+        renderFront={(item) => render(item, "FRONT")}
+        renderBack={(item) => render(item, "BACK")}
         leftAction={{
-          color: "#34c759",
+          color: "#34c759", // Green for 'Keep'
           icon: { type: "vector", name: "checkmark-circle" },
           widthRatio: 0.3,
         }}
         rightAction={{
-          color: "#ff3b30",
+          color: "#ff3b30", // Red for 'Delete'
           icon: { type: "vector", name: "trash" },
           widthRatio: 0.3,
         }}
-        onSwipeCommit={() => setIndex((i) => nextIndex(i))}
+        /**
+         * Triggered when a swipe animation successfully completes.
+         * Dispatches the 'next' action to increment the cursor in Redux.
+         */
+        onSwipeCommit={() => dispatch(mediaScanActions.next())}
       />
     </View>
   );

@@ -7,6 +7,7 @@ export const darkTheme: ThemeTokens = {
     mutedText: "rgba(255,255,255,0.75)",
     primary: "#7C3AED",
     track: "rgba(255,255,255,0.14)",
+    danger: "#DC2626",
   },
   spacing: {
     sm: 8,

@@ -11,32 +11,26 @@ export default function makeLoadingScreenStyles(theme: ThemeTokens) {
       backgroundColor: theme.colors.background,
       alignItems: "center",
       justifyContent: "center",
-      padding: theme.spacing.lg,
-      gap: theme.spacing.md,
+      padding: 24,
+      gap: 16,
     },
-
     title: {
-      fontSize: theme.typography.title,
+      fontSize: 24,
       color: theme.colors.text,
+      fontWeight: "700",
     },
-
     subtitle: {
-      fontSize: theme.typography.body,
+      fontSize: 14,
       color: theme.colors.mutedText,
+      textAlign: "center",
     },
-
-    barTrack: {
+    bottom: {
       width: "100%",
-      height: 10,
-      backgroundColor: theme.colors.track,
-      borderRadius: theme.radius.pill,
-      overflow: "hidden",
-      marginTop: theme.spacing.md,
+      marginTop: 16,
     },
-
-    barFill: {
-      height: "100%",
-      backgroundColor: theme.colors.primary,
+    error: {
+      marginTop: 10,
+      color: theme.colors.danger ?? "red",
     },
   });
 }

@@ -7,6 +7,7 @@ export const lightTheme: ThemeTokens = {
     mutedText: "rgba(11,15,26,0.7)",
     primary: "#7C3AED",
     track: "rgba(0,0,0,0.1)",
+    danger: "#DC2626",
   },
   spacing: {
     sm: 8,
