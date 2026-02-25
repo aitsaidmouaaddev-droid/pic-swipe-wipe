@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Pressable, Text, StyleSheet } from "react-native";
+import { View, Pressable, Text } from "react-native";
 import type { TabConfigItem, TabName } from "./tabs.config";
 import Icon from "@ui/icon/Icon";
 import { ThemeTokens } from "@themes/theme";
@@ -85,13 +85,9 @@ export default function TabBar({
       {tabs.map((tab) => {
         const isActive = tab.name === activeTab;
 
-        const iconColor = isActive
-          ? theme.colors.primary
-          : theme.colors.mutedText;
+        const iconColor = isActive ? theme.colors.primary : theme.colors.mutedText;
 
-        const labelColor = isActive
-          ? theme.colors.primary
-          : theme.colors.mutedText;
+        const labelColor = isActive ? theme.colors.primary : theme.colors.mutedText;
 
         const hasIcon = Boolean(tab.icon) && showIcons;
         const hasLabel = Boolean(tab.title) && showLabels;
@@ -100,10 +96,7 @@ export default function TabBar({
           <Pressable
             key={tab.name}
             onPress={() => onTabPress(tab.name)}
-            style={({ pressed }) => [
-              styles.item,
-              pressed ? { opacity: 0.85 } : null,
-            ]}
+            style={({ pressed }) => [styles.item, pressed ? { opacity: 0.85 } : null]}
           >
             <View
               style={[
@@ -120,9 +113,7 @@ export default function TabBar({
               ) : null}
 
               {hasLabel ? (
-                <Text style={[styles.label, { color: labelColor }]}>
-                  {tab.title}
-                </Text>
+                <Text style={[styles.label, { color: labelColor }]}>{tab.title}</Text>
               ) : null}
             </View>
           </Pressable>
@@ -141,4 +132,3 @@ function getFlexDirection(pos: TabIconPosition) {
   if (pos === "bottom") return "column-reverse";
   return "column"; // top
 }
-

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
-import  makeTrashScreenStyles  from "./trashScreen.style";
+import makeTrashScreenStyles from "./trashScreen.style";
 
 /**
  * Trash screen (tab content).

@@ -28,7 +28,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
  * It stores the current mode in state, and computes the theme object.
  */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState<"dark" | "light">("light");
+  const [mode, setMode] = useState<"dark" | "light">("dark");
 
   /**
    * useMemo caches the theme object so it only recalculates

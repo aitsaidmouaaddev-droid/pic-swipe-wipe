@@ -9,10 +9,7 @@ import type { IconProps } from "@ui/icon/Icon";
  * @example
  * app/(tabs)/HomeTab.tsx  -> "HomeTab"
  */
-export type TabName =
-  | "HomeTab"
-  | "TrashTab"
-  | "ApprovedTab";
+export type TabName = "HomeTab" | "TrashTab" | "ApprovedTab";
 
 /**
  * Describes a single tab entry.

@@ -1,13 +1,7 @@
 import React from "react";
-import {
-
-  View,
-
-  type ViewStyle,
-} from "react-native";
+import { View, type ViewStyle } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
 import makeCardStyles from "./card.style";
-
 
 /**
  * Props for {@link Card}.
@@ -17,7 +11,7 @@ export interface CardProps {
   children: React.ReactNode;
 
   /** Optional style override (size/position/radius). */
-  style?: ViewStyle;
+  style?: ViewStyle | ViewStyle[];
 
   /**
    * Optional overlay renderer.

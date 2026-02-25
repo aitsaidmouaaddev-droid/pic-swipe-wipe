@@ -1,4 +1,3 @@
-
 import { StyleSheet } from "react-native";
 import { ThemeTokens } from "@themes/theme";
 
@@ -6,7 +5,7 @@ import { ThemeTokens } from "@themes/theme";
  * Styles for {@link ApprovedScreen}.
  */
 export default function makeTabBarStyles(theme: ThemeTokens) {
-   return StyleSheet.create({
+  return StyleSheet.create({
     container: {
       position: "absolute",
       left: 16,

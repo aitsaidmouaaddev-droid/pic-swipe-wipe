@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import type { ThemeTokens } from "@themes/theme";
 
-
 /**
  * Creates themed styles for {@link Card}.
  */

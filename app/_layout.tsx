@@ -8,32 +8,32 @@ import * as ScreenOrientation from "expo-screen-orientation";
 import * as NavigationBar from "expo-navigation-bar";
 import { StatusBar } from "expo-status-bar";
 
-
 /**
- * Root layout for the whole app.
+ * Root layout and global provider wrapper for the entire application.
  *
- * Purpose:
- * - Wraps every screen with global providers (ThemeProvider, later: store, i18n, etc.)
- * - Renders the active route via <Slot />
- * - Lock screen orientation
- * - Hide Android navigation bar
- * - Hide status bar
- * - Provide global theme
+ * This component acts as the highest level of the app's component tree. It wraps
+ * every screen with essential global state providers and applies critical
+ * device-level UI configurations immediately upon mounting.
+ *
+ * **Key Responsibilities:**
+ * - Injects the global Redux {@link store} via the `<Provider>`.
+ * - Injects the custom {@link ThemeProvider} for app-wide styling.
+ * - Renders the currently active route using Expo Router's `<Slot />`.
+ * - Locks the device screen orientation strictly to Portrait mode.
+ * - Hides the system Status Bar for a fully immersive, full-screen experience.
+ * - Hides the Android bottom navigation bar (setting behavior to `overlay-swipe`).
+ *
+ * @returns The fully wrapped application component tree.
  */
 export default function Layout() {
-
   useEffect(() => {
     // Lock orientation to portrait
-    ScreenOrientation.lockAsync(
-      ScreenOrientation.OrientationLock.PORTRAIT
-    );
+    ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
 
     // 📱 Hide Android bottom navigation bar
     NavigationBar.setVisibilityAsync("hidden");
     NavigationBar.setBehaviorAsync("overlay-swipe");
-
   }, []);
-
 
   return (
     <Provider store={store}>

@@ -11,7 +11,6 @@ export const useAppDispatch = () => useDispatch<AppDispatch>();
  */
 export const useAppSelector = useSelector.withTypes<RootState>();
 
-
 export default {
   useAppDispatch,
   useAppSelector,

@@ -63,7 +63,7 @@ export type IconProps = VectorIconProps | SvgIconProps;
  * - Vector icons (default: Ionicons)
  * - SVG components (react-native-svg)
  */
-export  default  function Icon(props: IconProps) {
+export default function Icon(props: IconProps) {
   const size = props.size ?? 20;
   const color = props.color ?? "#000";
 

@@ -19,7 +19,7 @@ export type ButtonIconPosition = "left" | "right" | "top" | "bottom";
 /**
  * Creates themed styles for {@link Button}.
  */
-export  default  function makeButtonStyles(theme: ThemeTokens) {
+export default function makeButtonStyles(theme: ThemeTokens) {
   return StyleSheet.create({
     base: {
       borderRadius: theme.radius.md,

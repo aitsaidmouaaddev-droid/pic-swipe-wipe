@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
-import makeApprovedScreenStyles  from "./approvedScreen.style";
+import makeApprovedScreenStyles from "./approvedScreen.style";
 
 /**
  * Approved screen (tab content).

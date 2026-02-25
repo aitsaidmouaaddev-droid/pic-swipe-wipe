@@ -20,13 +20,13 @@ export default function HomeScreen() {
   const dispatch = useAppDispatch();
 
   /** * The media item currently being displayed on top of the stack.
-   * @type {MediaItem | null} 
+   * @type {MediaItem | null}
    */
   const frontItem = useAppSelector(selectFrontItem);
 
-  /** * The next media item in the queue, rendered behind the front item 
+  /** * The next media item in the queue, rendered behind the front item
    * to ensure smooth transitions during swiping.
-   * @type {MediaItem | null} 
+   * @type {MediaItem | null}
    */
   const backItem = useAppSelector(selectBackItem);
 
@@ -38,13 +38,7 @@ export default function HomeScreen() {
    */
   const render = (item: any, label: string) => {
     if (item.type === "photo") {
-      return (
-        <Image
-          source={{ uri: item.uri }}
-          style={{ flex: 1 }}
-          resizeMode="cover"
-        />
-      );
+      return <Image source={{ uri: item.uri }} style={{ flex: 1 }} resizeMode="cover" />;
     }
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -66,7 +60,7 @@ export default function HomeScreen() {
   return (
     <View style={{ flex: 1 }}>
       <CardsDeck
-        /** * The key is tied to frontItem.id to ensure the component 
+        /** * The key is tied to frontItem.id to ensure the component
          * re-mounts/resets internal animation states when the item changes.
          */
         key={frontItem.id}

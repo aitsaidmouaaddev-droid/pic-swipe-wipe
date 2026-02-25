@@ -50,68 +50,65 @@ const initialState: MediaScanState = {
  * * @returns {Promise<MediaItem[]>} A flat list of all photos found.
  * @throws {string} Error message on permission denial or library failure.
  */
-export const scanDevicePhotos = createAsyncThunk<
-  MediaItem[],
-  void,
-  { rejectValue: string }
->("mediaScan/scanDevicePhotos", async (_, thunkApi) => {
-  try {
-    // 1) Permission handling
-    const perm = await MediaLibrary.requestPermissionsAsync();
-    const granted = perm.status === "granted";
-    thunkApi.dispatch(
-      mediaScanSlice.actions.setPermission(granted ? "granted" : "denied")
-    );
+export const scanDevicePhotos = createAsyncThunk<MediaItem[], void, { rejectValue: string }>(
+  "mediaScan/scanDevicePhotos",
+  async (_, thunkApi) => {
+    try {
+      // 1) Permission handling
+      const perm = await MediaLibrary.requestPermissionsAsync();
+      const granted = perm.status === "granted";
+      thunkApi.dispatch(mediaScanSlice.actions.setPermission(granted ? "granted" : "denied"));
 
-    if (!granted) return thunkApi.rejectWithValue("Media permission denied");
+      if (!granted) return thunkApi.rejectWithValue("Media permission denied");
 
-    // 2) Page through photos
-    const pageSize = 200;
-    let after: string | undefined = undefined;
-    let hasNextPage = true;
+      // 2) Page through photos
+      const pageSize = 200;
+      let after: string | undefined = undefined;
+      let hasNextPage = true;
 
-    const collected: MediaItem[] = [];
-    let totalCount = 0;
+      const collected: MediaItem[] = [];
+      let totalCount = 0;
 
-    while (hasNextPage) {
-      const page = await MediaLibrary.getAssetsAsync({
-        first: pageSize,
-        after,
-        sortBy: [[MediaLibrary.SortBy.creationTime, false]],
-        mediaType: [MediaLibrary.MediaType.photo], // ✅ photos only
-      });
-
-      // Platform check: totalCount is primarily available on Android
-      if (!totalCount && typeof (page as any).totalCount === "number") {
-        totalCount = (page as any).totalCount;
-      }
-
-      for (const a of page.assets) {
-        collected.push({
-          id: a.id,
-          name: a.filename ?? a.id,
-          type: "photo",
-          uri: a.uri,
+      while (hasNextPage) {
+        const page = await MediaLibrary.getAssetsAsync({
+          first: pageSize,
+          after,
+          sortBy: [[MediaLibrary.SortBy.creationTime, false]],
+          mediaType: [MediaLibrary.MediaType.photo], // ✅ photos only
         });
+
+        // Platform check: totalCount is primarily available on Android
+        if (!totalCount && typeof (page as any).totalCount === "number") {
+          totalCount = (page as any).totalCount;
+        }
+
+        for (const a of page.assets) {
+          collected.push({
+            id: a.id,
+            name: a.filename ?? a.id,
+            type: "photo",
+            uri: a.uri,
+          });
+        }
+
+        after = page.endCursor ?? undefined;
+        hasNextPage = page.hasNextPage;
+
+        // 3) Update real-time progress
+        if (totalCount > 0) {
+          thunkApi.dispatch(mediaScanSlice.actions.setProgress(collected.length / totalCount));
+        }
       }
 
-      after = page.endCursor ?? undefined;
-      hasNextPage = page.hasNextPage;
+      // Finalize progress bar
+      thunkApi.dispatch(mediaScanSlice.actions.setProgress(1));
 
-      // 3) Update real-time progress
-      if (totalCount > 0) {
-        thunkApi.dispatch(mediaScanSlice.actions.setProgress(collected.length / totalCount));
-      }
+      return collected;
+    } catch (e: any) {
+      return thunkApi.rejectWithValue(e?.message ?? "Photo scan failed");
     }
-
-    // Finalize progress bar
-    thunkApi.dispatch(mediaScanSlice.actions.setProgress(1));
-
-    return collected;
-  } catch (e: any) {
-    return thunkApi.rejectWithValue(e?.message ?? "Photo scan failed");
-  }
-});
+  },
+);
 
 /**
  * Redux slice for managing device photo discovery and navigation.

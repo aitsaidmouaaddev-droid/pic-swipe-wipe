@@ -57,9 +57,7 @@ export default function LoadingScreen({
    * Redux hooks
    */
   const dispatch = useAppDispatch();
-  const { permission, isScanning, progress, items, error } = useAppSelector(
-    (s) => s.mediaScan
-  );
+  const { permission, isScanning, progress, items, error } = useAppSelector((s) => s.mediaScan);
 
   /**
    * Start scan ONCE when screen mounts
@@ -88,8 +86,8 @@ export default function LoadingScreen({
         ? "Permission granted. Scanning media…"
         : "Scan complete."
       : permission === "denied"
-      ? "Permission denied."
-      : "Requesting permissions…";
+        ? "Permission denied."
+        : "Requesting permissions…";
 
   return (
     <View style={styles.container}>

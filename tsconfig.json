@@ -8,15 +8,8 @@
       "@styles/*": ["./styles/*"],
       "@store/*": ["./app/store/*"],
       "@ui/*": ["./app/ui/*"],
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

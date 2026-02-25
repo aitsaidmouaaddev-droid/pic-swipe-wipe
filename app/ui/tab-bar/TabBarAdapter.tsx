@@ -9,8 +9,9 @@ import { ThemeTokens } from "@themes/theme";
  * Converts React Navigation tab props into props expected by {@link TabBar}.
  */
 export interface TabBarAdapterProps
-  extends BottomTabBarProps,
-  Pick<TabBarProps, "showIcons" | "showLabels" | "iconPosition" | "gap" | "iconSize"> {
+  extends
+    BottomTabBarProps,
+    Pick<TabBarProps, "showIcons" | "showLabels" | "iconPosition" | "gap" | "iconSize"> {
   theme: ThemeTokens;
   tabs: TabConfigItem[];
 }
