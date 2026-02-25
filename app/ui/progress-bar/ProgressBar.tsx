@@ -22,8 +22,8 @@ export default function ProgressBar({ value }: ProgressBarProps) {
   const pct = Math.max(0, Math.min(value, 1)) * 100;
 
   return (
-    <View style={styles.track}>
-      <View style={[styles.fill, { width: `${pct}%` }]} />
+    <View style={styles.track} testID="progress-track">
+      <View style={[styles.fill, { width: `${pct}%` }]} testID="progress-fill" />
     </View>
   );
 }

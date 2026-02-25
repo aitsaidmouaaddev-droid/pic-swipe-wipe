@@ -59,18 +59,26 @@ export interface SvgIconProps extends IconBaseProps {
 export type IconProps = VectorIconProps | SvgIconProps;
 
 /**
- * Atomic Icon component supporting:
- * - Vector icons (default: Ionicons)
- * - SVG components (react-native-svg)
+ * Atomic Icon component that acts as a unified interface for both Vector and SVG icons.
+ *
+ * This component abstracts away the differences between `@expo/vector-icons` and
+ * `react-native-svg` components, providing a consistent API for size, color, and styling.
+ *
+ * **Key Features:**
+ * - **Vector Mode**: Renders standard icon sets (defaulting to {@link Ionicons}).
+ * - **SVG Mode**: Renders custom SVG components with automatic `fill` and `stroke` mapping.
+ * - **Theming**: Easily controlled via `size` and `color` props.
+ *
+ * @returns A wrapped icon component ready for UI use.
  */
-export default function Icon(props: IconProps) {
+export default function Icon(props: IconProps & { testID?: string }) {
   const size = props.size ?? 20;
   const color = props.color ?? "#000";
 
   if (props.type === "svg") {
     const Svg = props.Svg;
     return (
-      <View style={props.style}>
+      <View style={props.style} testID={props.testID}>
         <Svg width={size} height={size} fill={color} stroke={color} />
       </View>
     );
@@ -78,7 +86,7 @@ export default function Icon(props: IconProps) {
 
   const Renderer = props.as ?? (Ionicons as unknown as IconRenderer);
   return (
-    <View style={props.style}>
+    <View style={props.style} testID={props.testID}>
       <Renderer name={props.name} size={size} color={color} />
     </View>
   );
