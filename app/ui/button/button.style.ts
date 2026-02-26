@@ -3,8 +3,9 @@ import { StyleSheet } from "react-native";
 
 /**
  * Button visual variants.
+ * Added: 'danger' and 'outline'
  */
-export type ButtonVariant = "primary" | "secondary" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "outline";
 
 /**
  * Button sizes.
@@ -36,15 +37,23 @@ export default function makeButtonStyles(theme: ThemeTokens) {
     primary: { backgroundColor: theme.colors.primary },
     secondary: { backgroundColor: theme.colors.track },
     ghost: { backgroundColor: "transparent" },
+    danger: { backgroundColor: theme.colors.danger },
+    outline: {
+      backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: theme.colors.primary,
+    },
 
     // disabled state
     disabled: { opacity: 0.5 },
 
     // text
-    textBase: { fontSize: theme.typography.body },
+    textBase: { fontSize: theme.typography.body, fontWeight: "600" },
     textOnPrimary: { color: theme.colors.background },
     textDefault: { color: theme.colors.text },
     textMuted: { color: theme.colors.mutedText },
+    textDanger: { color: theme.colors.background }, // White text on red background
+    textOutline: { color: theme.colors.primary },
   });
 }
 
@@ -52,18 +61,35 @@ export default function makeButtonStyles(theme: ThemeTokens) {
  * Returns the appropriate text color style key based on variant.
  */
 export function getButtonTextStyleKey(variant: ButtonVariant) {
-  if (variant === "primary") return "textOnPrimary";
-  if (variant === "secondary") return "textDefault";
-  return "textMuted";
+  switch (variant) {
+    case "primary":
+      return "textOnPrimary";
+    case "danger":
+      return "textDanger";
+    case "outline":
+      return "textOutline";
+    case "secondary":
+      return "textDefault";
+    default:
+      return "textMuted";
+  }
 }
 
 /**
  * Returns the icon color for the given button variant.
  */
 export function getButtonIconColor(theme: ThemeTokens, variant: ButtonVariant) {
-  if (variant === "primary") return theme.colors.background;
-  if (variant === "secondary") return theme.colors.text;
-  return theme.colors.mutedText;
+  switch (variant) {
+    case "primary":
+    case "danger":
+      return theme.colors.background;
+    case "outline":
+      return theme.colors.primary;
+    case "secondary":
+      return theme.colors.text;
+    default:
+      return theme.colors.mutedText;
+  }
 }
 
 /**

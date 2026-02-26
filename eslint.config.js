@@ -8,6 +8,7 @@ module.exports = defineConfig([
   prettierConfig, // This adds the Prettier plugin AND turns off conflicting rules
   {
     ignores: [
+      "jest.*",
       "dist/*",
       ".expo/*",
       "docs/*",

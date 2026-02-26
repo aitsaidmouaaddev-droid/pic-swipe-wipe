@@ -10,6 +10,11 @@ jest.mock("@expo/vector-icons", () => {
   };
 });
 
+jest.mock("@expo/vector-icons", () => ({
+  Ionicons: "Ionicons",
+  MaterialIcons: "MaterialIcons",
+}));
+
 describe("Icon Component", () => {
   describe("Vector Mode", () => {
     it("renders a vector icon with the correct name and size", () => {

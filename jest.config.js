@@ -1,21 +1,26 @@
 module.exports = {
   verbose: true,
-  setupFilesAfterEnv: ["./node_modules/react-native-gesture-handler/jestSetup.js"],
-  preset: "react-native",
+  preset: "jest-expo", // 🎯 Use jest-expo preset for better compatibility
+  setupFilesAfterEnv: [
+    "./node_modules/react-native-gesture-handler/jestSetup.js",
+    "@testing-library/jest-native/extend-expect",
+    "<rootDir>/jest.setup.js",
+  ],
   transformIgnorePatterns: [
-    "node_modules/(?!((jest-)?@react-native|react-native|react-clone-referenced-element|react-navigation|@react-navigation/.*|native-base))",
+    "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|@expo/vector-icons)",
   ],
   testEnvironment: "node",
   moduleNameMapper: {
-    // 🎯 This is the fix.
-    // It tells Jest: "When you see @themes, look in the styles/themes folder"
-    "^@themes/(.*)$": "<rootDir>/styles/themes/$1",
-
-    // Add these if you use them in your imports:
+    // 🎯 FIX 1: Removed the double "app/app" typo.
+    // It's now pointing correctly to <rootDir>/app/ui/
     "^@ui/(.*)$": "<rootDir>/app/ui/$1",
+
+    "^@themes/(.*)$": "<rootDir>/styles/themes/$1",
     "^@store/(.*)$": "<rootDir>/app/store/$1",
 
-    // This handles the Expo Winter bug we fought earlier
-    "^expo/src/winter/(.*)$": "<rootDir>/__mocks__/expo-winter-dummy.js",
+    // 🎯 FIX 2: Removed the hardcoded "@expo/vector-icons" mapping.
+    // Mapping it to /build/index.js was causing the "Could not locate" error.
+    // By removing this, Jest will find the package normally, and your
+    // jest.mock() inside the test file will take over properly.
   },
 };

@@ -90,13 +90,18 @@ export interface ButtonProps {
 }
 
 /**
- * Atomic Button built on top of {@link Pressable}.
- *
- * Supports:
- * - text only
- * - icon only
- * - icon + text (left/right/top/bottom)
- * - start/end icons
+ * Atomic Button component built on top of {@link Pressable}.
+ * * This component follows the design system tokens and supports multiple
+ * visual variants, sizes, and flexible icon configurations.
+ * * @example
+ * ```tsx
+ * <Button
+ * label="Get Started"
+ * variant="primary"
+ * startIcon={{ type: 'vector', name: 'arrow-forward' }}
+ * onPress={() => console.log('Pressed')}
+ * />
+ * ```
  */
 export default function Button({
   label,

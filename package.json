@@ -15,8 +15,9 @@
     "format": "prettier --write .",
     "clear-test-cache": "test -- --clearCache",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:clean": "jest --clearCache && jest --watchAll=false",
+    "test:watch": "jest  --watch",
+    "test:clean": "jest  --clearCache && jest --watchAll=false",
+    "test:clean:update-snaphots": "jest  --clearCache && jest --watchAll=false -u",
     "storybook-generate": "sb-rn-get-stories",
     "storybook": "npm run storybook-generate && cross-env EXPO_PUBLIC_STORYBOOK_ENABLED=true expo start --dev-client",
     "storybook:expo-go": "npm run storybook-generate && expo start"

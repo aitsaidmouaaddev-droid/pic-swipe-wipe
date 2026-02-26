@@ -439,6 +439,7 @@ export default function CardsDeck<TFront, TBack = TFront>({
 
         {/* FRONT card (current draggable) */}
         <Animated.View
+          testID="deck-front-card"
           style={[styles.layer, { transform: [{ translateX }] }]}
           {...panResponder.panHandlers}
         >

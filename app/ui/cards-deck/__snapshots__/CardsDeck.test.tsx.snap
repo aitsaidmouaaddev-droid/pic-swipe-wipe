@@ -1,0 +1,256 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardsDeck Component renders action overlays when config is provided 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    [
+      {
+        "backgroundColor": "#F8FAFC",
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transform": [
+            {
+              "scale": 0.985,
+            },
+          ],
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "backgroundColor": "#F8FAFC",
+              "borderColor": undefined,
+              "borderRadius": 12,
+              "borderWidth": 0,
+              "elevation": 8,
+              "overflow": "hidden",
+              "shadowColor": "#000",
+              "shadowOffset": {
+                "height": 10,
+                "width": 0,
+              },
+              "shadowOpacity": 0.15,
+              "shadowRadius": 18,
+            },
+            [
+              {
+                "flex": 1,
+                "height": "100%",
+              },
+              {},
+            ],
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "flex": 1,
+              }
+            }
+          />
+        </View>
+        <View
+          style={
+            {
+              "bottom": 0,
+              "left": 0,
+              "pointerEvents": "none",
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "borderBottomLeftRadius": 999,
+                "borderTopLeftRadius": 999,
+                "bottom": 0,
+                "justifyContent": "center",
+                "left": 0,
+                "opacity": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "top": 0,
+                "width": 0.3,
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                {
+                  "backgroundColor": "green",
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "top": 0,
+                  "transform": [
+                    {
+                      "translateX": -0.3,
+                    },
+                  ],
+                  "width": 0.3,
+                }
+              }
+            />
+            <View>
+              <View
+                color="#F8FAFC"
+                name="checkmark"
+                size={26}
+              />
+            </View>
+          </View>
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "borderBottomRightRadius": 999,
+                "borderTopRightRadius": 999,
+                "bottom": 0,
+                "justifyContent": "center",
+                "opacity": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+                "width": 0.3,
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                {
+                  "backgroundColor": "red",
+                  "bottom": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "transform": [
+                    {
+                      "translateX": 0.3,
+                    },
+                  ],
+                  "width": 0.3,
+                }
+              }
+            />
+            <View>
+              <View
+                color="#F8FAFC"
+                name="trash"
+                size={26}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    <View
+      collapsable={false}
+      onMoveShouldSetResponder={[Function]}
+      onMoveShouldSetResponderCapture={[Function]}
+      onResponderEnd={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderReject={[Function]}
+      onResponderRelease={[Function]}
+      onResponderStart={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
+      style={
+        {
+          "bottom": 0,
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transform": [
+            {
+              "translateX": 0,
+            },
+          ],
+        }
+      }
+      testID="deck-front-card"
+    >
+      <View
+        style={
+          [
+            {
+              "backgroundColor": "#F8FAFC",
+              "borderColor": undefined,
+              "borderRadius": 12,
+              "borderWidth": 0,
+              "elevation": 8,
+              "overflow": "hidden",
+              "shadowColor": "#000",
+              "shadowOffset": {
+                "height": 10,
+                "width": 0,
+              },
+              "shadowOpacity": 0.15,
+              "shadowRadius": 18,
+            },
+            [
+              {
+                "flex": 1,
+              },
+              {},
+            ],
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <View />
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;
