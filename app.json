@@ -17,7 +17,7 @@
       "package": "com.stifler9421sorganization.picswipewipe"
     },
     "web": {
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -28,7 +28,8 @@
           "photosPermission": "Allow Pic Swipe Wipe to access your photos.",
           "savePhotosPermission": "Allow Pic Swipe Wipe to save changes to your photos."
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -38,7 +39,8 @@
       "router": {},
       "eas": {
         "projectId": "8f860b76-ab07-4c3c-8cbc-812ecff812cf"
-      }
+      },
+      "storybookEnabled": "process.env.STORYBOOK_ENABLED === 'true'"
     },
     "owner": "stifler9421s-organization"
   }

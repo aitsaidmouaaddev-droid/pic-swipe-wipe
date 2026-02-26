@@ -5,7 +5,7 @@ export const lightTheme: ThemeTokens = {
     background: "#FFFFFF",
     text: "#0B0F1A",
     mutedText: "rgba(11,15,26,0.7)",
-    primary: "#7C3AED",
+    primary: "#1374c4ff",
     track: "rgba(0,0,0,0.1)",
     danger: "#DC2626",
   },

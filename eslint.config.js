@@ -7,7 +7,15 @@ module.exports = defineConfig([
   expoConfig,
   prettierConfig, // This adds the Prettier plugin AND turns off conflicting rules
   {
-    ignores: ["dist/*", ".expo/*", "docs/*"], // Good idea to ignore Expo's build folder too
+    ignores: [
+      "dist/*",
+      ".expo/*",
+      "docs/*",
+      ".rnstorybook/*",
+      "**/*.stories.tsx", // 🎯 Ignore all story files
+      "**/*.stories.ts", // 🎯 Ignore TS-only stories
+      "**/storybook.requires.ts", // Ignore the auto-generated file
+    ], // Good idea to ignore Expo's build folder too
   },
   {
     // Optional: If you want formatting issues to show up as warnings instead of errors

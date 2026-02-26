@@ -1,56 +1,70 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
-import { lightTheme } from "./light";
+import React, { createContext, useContext, useState, useMemo, ReactNode } from "react";
 import { ThemeTokens } from "./theme";
+import { lightTheme } from "./light";
 import { darkTheme } from "./dark";
 
 /**
- * This is the "shape" of what our ThemeContext will expose.
- * We expose:
- * - theme: the current tokens (colors, spacing, etc.)
- * - mode: "dark" or "light"
- * - setMode: function to switch themes later
+ * Defines the shape of the Theme Context state.
  */
-export interface ThemeContextValue {
+interface ThemeContextType {
+  /** The current active theme object containing colors, spacing, etc. */
   theme: ThemeTokens;
-  mode: "dark" | "light";
-  setMode: (mode: "dark" | "light") => void;
+  /** A boolean flag indicating if the current mode is dark. */
+  isDark: boolean;
+  /** Function to switch between light and dark modes. */
+  toggleTheme: () => void;
+  /** The name of the current mode ('light' | 'dark'). */
+  mode: "light" | "dark";
 }
 
-/**
- * Create the context.
- * Default value is only used if a component calls useTheme()
- * WITHOUT being wrapped in <ThemeProvider />.
- */
-const ThemeContext = createContext<ThemeContextValue | null>(null);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 /**
- * Provider component.
- * It stores the current mode in state, and computes the theme object.
+ * Provider component that wraps your app to provide theme state.
+ * * This provider manages the switching logic between light and dark themes
+ * and persists the choice during the app session.
+ *
+ * @param children - The component tree to be wrapped.
+ * @returns A Context Provider wrapping the provided children.
  */
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState<"dark" | "light">("dark");
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [mode, setMode] = useState<"light" | "dark">("light");
 
   /**
-   * useMemo caches the theme object so it only recalculates
-   * when "mode" changes.
+   * Toggles the theme mode between 'light' and 'dark'.
    */
-  const theme = useMemo(() => {
-    return mode === "dark" ? darkTheme : lightTheme;
-  }, [mode]);
+  const toggleTheme = () => {
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+  };
 
-  const value: ThemeContextValue = { theme, mode, setMode };
+  /**
+   * Memoized theme object to prevent unnecessary re-renders of consuming components.
+   */
+  const value = useMemo(
+    () => ({
+      theme: mode === "light" ? lightTheme : darkTheme,
+      isDark: mode === "dark",
+      toggleTheme,
+      mode,
+    }),
+    [mode],
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
-}
+};
 
 /**
- * Custom hook to read ThemeContext safely.
- * If used outside ThemeProvider, it throws an error (good for debugging).
+ * Custom hook to access the current theme and toggle functionality.
+ * * @throws Error if used outside of a {@link ThemeProvider}.
+ * @returns The {@link ThemeContextType} object.
+ * * @example
+ * const { theme, toggleTheme } = useTheme();
+ * return <View style={{ backgroundColor: theme.colors.background }} />
  */
-export function useTheme(): ThemeContextValue {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) {
-    throw new Error("useTheme must be used inside a ThemeProvider");
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
-  return ctx;
-}
+  return context;
+};
