@@ -1,40 +1,31 @@
+/**
+ * @file HomeScreen.tsx
+ * @description Écran principal connectant le deck de cartes à Redux et à la persistance SQLite.
+ * Gère la navigation dans les médias et l'enregistrement des décisions de l'utilisateur.
+ */
 import React from "react";
 import { View, Text, Image } from "react-native";
 import CardsDeck from "@ui/cards-deck/CardsDeck";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { mediaScanActions } from "@store/mediaScanSlice";
 import { selectFrontItem, selectBackItem } from "@store/mediaSelectors";
+import { useMedia } from "@hooks/useMedia.hook";
 
-/**
- * HomeScreen Component
- * * The primary view for the application's "Swipe to Wipe" functionality.
- * It connects to the Redux store to display a deck of media assets (photos/videos)
- * and handles navigation through the media library via swipe gestures.
- * * @component
- * @example
- * return (
- * <HomeScreen />
- * )
- */
 export default function HomeScreen() {
+  console.log(`HomeScreen rendered `);
+
   const dispatch = useAppDispatch();
 
-  /** * The media item currently being displayed on top of the stack.
-   * @type {MediaItem | null}
+  /** * 🧠 Récupération du hook global pour la persistance.
+   * handleSwipeCommit s'occupe de l'écriture en base SQLite.
    */
-  const frontItem = useAppSelector(selectFrontItem);
+  const { handleSwipeCommit } = useMedia();
 
-  /** * The next media item in the queue, rendered behind the front item
-   * to ensure smooth transitions during swiping.
-   * @type {MediaItem | null}
-   */
+  const frontItem = useAppSelector(selectFrontItem);
   const backItem = useAppSelector(selectBackItem);
 
   /**
-   * Internal helper to handle the conditional rendering of media types.
-   * * @param {any} item - The MediaItem object to render.
-   * @param {string} label - Debug label identifying if the item is "FRONT" or "BACK".
-   * @returns {JSX.Element} A View containing either an Image or a Video placeholder.
+   * Helper pour le rendu des médias.
    */
   const render = (item: any, label: string) => {
     if (item.type === "photo") {
@@ -48,8 +39,21 @@ export default function HomeScreen() {
     );
   };
 
-  // Render Empty State
-  if (!frontItem || !backItem) {
+  /**
+   * 🚀 Gestionnaire de swipe synchronisé.
+   * Combine la mise à jour de l'UI (Redux) et la sauvegarde (SQLite).
+   */
+  const onCommit = (direction: "left" | "right") => {
+    if (!frontItem) return;
+
+    // 1. Sauvegarde la décision en base de données (Metadata Ledger)
+    handleSwipeCommit(frontItem.id, direction);
+
+    // 2. Passe à l'item suivant dans Redux pour l'animation UI
+    dispatch(mediaScanActions.next());
+  };
+
+  if (!frontItem) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>No items yet. Run scan.</Text>
@@ -60,9 +64,6 @@ export default function HomeScreen() {
   return (
     <View style={{ flex: 1 }}>
       <CardsDeck
-        /** * The key is tied to frontItem.id to ensure the component
-         * re-mounts/resets internal animation states when the item changes.
-         */
         key={frontItem.id}
         containerStyle={{ flex: 1 }}
         cardStyle={{ borderRadius: 0 }}
@@ -82,10 +83,10 @@ export default function HomeScreen() {
           widthRatio: 0.3,
         }}
         /**
-         * Triggered when a swipe animation successfully completes.
-         * Dispatches the 'next' action to increment the cursor in Redux.
+         * 🎯 Appel de notre gestionnaire synchronisé.
+         * On passe la direction reçue de CardsDeck au hook.
          */
-        onSwipeCommit={() => dispatch(mediaScanActions.next())}
+        onSwipeCommit={onCommit}
       />
     </View>
   );

@@ -8,6 +8,7 @@ import makeLoadingScreenStyles from "./loadingScreen.style";
 import ProgressBar from "@ui/progress-bar/ProgressBar";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
 import { scanDevicePhotos } from "@store/mediaScanSlice";
+import { getDatabase, resetDatabase } from "@/app/database/sqlite";
 
 /**
  * Props for {@link LoadingScreen}.
@@ -57,6 +58,29 @@ export default function LoadingScreen({
    * Redux hooks
    */
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const bootApp = async () => {
+      try {
+        // 1. Initialisation forcée de SQLite
+        await getDatabase();
+        if (__DEV__) await resetDatabase();
+
+        // 2. Temps de repos pour le bridge Android
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
+        // 3. Scan des médias
+        const result = await dispatch(scanDevicePhotos()).unwrap();
+
+        // 4. Navigation
+        if (result.length > 0) router.replace("/(tabs)/HomeTab");
+      } catch (e) {
+        console.error("Boot Error", e);
+      }
+    };
+
+    bootApp();
+  }, [dispatch]);
   const { permission, isScanning, progress, items, error } = useAppSelector((s) => s.mediaScan);
 
   /**

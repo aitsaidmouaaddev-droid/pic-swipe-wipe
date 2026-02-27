@@ -3,6 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "@hooks/*": ["./app/hooks/*"],
       "@mocks/*": ["./mocks/*"],
       "@themes/*": ["./styles/themes/*"],
       "@styles/*": ["./styles/*"],
