@@ -12,6 +12,7 @@ export const lightTheme: ThemeTokens = {
     danger: "#EF4444", // Punchy Red
     success: "#22C55E", // Forest Green
     border: "#E2E8F0",
+    track: "#8cc426ff", // Kept for backward compatibility with existing styles
   },
   spacing: {
     xs: 4,

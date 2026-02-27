@@ -1,5 +1,6 @@
 import React from "react";
 import TrashScreen from "../screens/trash-screen/TrashScreen";
+import { FocusUnmount } from "./FocusUnmount.wrapper";
 
 /**
  * Route wrapper for the "Trash" tab.
@@ -8,5 +9,9 @@ import TrashScreen from "../screens/trash-screen/TrashScreen";
  * * @returns The rendered {@link TrashScreen} UI.
  */
 export default function TrashTab() {
-  return <TrashScreen />;
+  return (
+    <FocusUnmount>
+      <TrashScreen />
+    </FocusUnmount>
+  );
 }

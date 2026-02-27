@@ -1,9 +1,37 @@
-import React, { useMemo, useRef, useState, useCallback } from "react";
+import React, { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import { Animated, PanResponder, View, type LayoutChangeEvent, type ViewStyle } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
 import makeCardsDeckStyles from "./cardsDeck.style";
 import Card from "@ui/card/Card";
 import Icon, { type IconProps } from "@ui/icon/Icon";
+
+/**
+ * =========================
+ * DEBUG HELPERS
+ * =========================
+ */
+const DEBUG = false; // <-- set false to silence logs
+
+const log = (...args: any[]) => {
+  if (!DEBUG) return;
+
+  console.log("[CardsDeck]", ...args);
+};
+
+// throttle spammy logs (moves)
+const makeThrottle = (ms: number) => {
+  let last = 0;
+  return (fn: () => void) => {
+    const now = Date.now();
+    if (now - last >= ms) {
+      last = now;
+      fn();
+    }
+  };
+};
+const throttle100 = makeThrottle(100);
+
+const itemKey = (item: any) => item?.id ?? item?.uri ?? item?.name ?? item?.key ?? "unknown";
 
 /**
  * Direction of a swipe based on dx (delta x) sign.
@@ -14,128 +42,51 @@ export type SwipeDirection = "left" | "right";
  * Swipe progress info emitted during dragging.
  */
 export interface SwipeProgressInfo {
-  /** Current translation on X axis in pixels. Negative = left. Positive = right. */
   dx: number;
-  /** Progress from `0` to `1` based on the commit threshold distance (NOT full width). */
   progress: number;
-  /** Direction inferred from `dx`. */
   direction: SwipeDirection;
 }
 
-/**
- * Visual configuration for an overlay action.
- *
- * **Note on Naming:**
- * - `leftAction` appears in the LEFT revealed gap (swipe RIGHT → green approve).
- * - `rightAction` appears in the RIGHT revealed gap (swipe LEFT → red trash).
- */
 export interface SwipeActionVisual {
-  /** Overlay background color. */
   color: string;
-
-  /** Icon rendered inside overlay. */
   icon: IconProps;
-
-  /**
-   * Max overlay width ratio relative to deck width.
-   * Clamped by `overlayMaxWidthRatio` in {@link CardsDeckProps}.
-   *
-   * @defaultValue `0.3`
-   */
   widthRatio?: number;
-
-  /** Icon size override. */
   iconSize?: number;
-
-  /** Icon color override. */
   iconColor?: string;
 }
 
-/**
- * Props for the {@link CardsDeck} component.
- *
- * This represents a UI-only controlled deck: the parent provides front/back items
- * (2 items only for optimal memory performance).
- * * @typeParam TFront - The data type of the front card item.
- * @typeParam TBack - The data type of the back card item (defaults to `TFront`).
- */
 export interface CardsDeckProps<TFront, TBack = TFront> {
-  /** Optional container style (positioning). */
   containerStyle?: ViewStyle;
 
-  /**
-   * Optional card style applied to BOTH cards.
-   * *Tip:* You usually only pass `borderRadius` here.
-   */
+  // kept (even if unused) to match your current props shape
+  commitDelayMs?: number;
+
+  // used for reset
+  resetKey?: any;
+
   cardStyle?: ViewStyle;
 
-  /** Front item to show (current). */
   frontItem: TFront;
-
-  /** Back item to show (next). */
   backItem?: TBack;
 
-  /** Function that renders the front card content. */
   renderFront: (item: TFront) => React.ReactNode;
-
-  /** Function that renders the back card content. Optional. If missing, a placeholder is rendered. */
   renderBack?: (item: TBack) => React.ReactNode;
 
-  /** Called while swiping (useful for debug/UI sync). */
   onSwipeProgress?: (info: SwipeProgressInfo) => void;
 
-  /**
-   * Auto-commit distance ratio of deck width.
-   * At this point, the card auto-swipes away (no release needed).
-   *
-   * @defaultValue `0.3`
-   */
   swipeAutoCommitThresholdRatio?: number;
-
-  /**
-   * Maximum overlay width ratio relative to deck width.
-   *
-   * @defaultValue `0.3`
-   */
   overlayMaxWidthRatio?: number;
-
-  /**
-   * Max overlay opacity reached at the commit threshold.
-   *
-   * @defaultValue `0.7`
-   */
   overlayMaxOpacity?: number;
 
-  /** Called once when a swipe auto-commits. */
   onSwipeCommit?: (direction: SwipeDirection) => void;
-
-  /** Called if a swipe is cancelled (user releases touch before the threshold). */
   onSwipeCancel?: () => void;
 
-  /** LEFT revealed gap overlay config (swipe RIGHT → approve). */
   leftAction?: SwipeActionVisual;
-
-  /** RIGHT revealed gap overlay config (swipe LEFT → trash). */
   rightAction?: SwipeActionVisual;
 
-  /**
-   * Adds subtle depth (scaling) on the back card during swipe.
-   * @defaultValue `true`
-   */
   backCardDepthEffect?: boolean;
 }
 
-/**
- * `CardsDeck`: A 2-card stack with auto-commit at a predefined threshold.
- *
- * **Key Features:**
- * - The back card exists solely to host the revealed overlays (approve/trash colors).
- * - The front card handles the `PanResponder` and is fully draggable.
- * - By mounting strictly 2 cards at a time, this component is highly optimized
- * for handling 1000+ media items without causing memory leaks.
- *
- * @returns The swipable deck UI component.
- */
 export default function CardsDeck<TFront, TBack = TFront>({
   containerStyle,
   cardStyle,
@@ -152,6 +103,7 @@ export default function CardsDeck<TFront, TBack = TFront>({
   leftAction,
   rightAction,
   backCardDepthEffect = true,
+  resetKey,
 }: CardsDeckProps<TFront, TBack>) {
   const { theme } = useTheme();
   const styles = makeCardsDeckStyles(theme);
@@ -163,8 +115,23 @@ export default function CardsDeck<TFront, TBack = TFront>({
   const committedThisGestureRef = useRef(false);
   const lastCommitAtRef = useRef(0);
 
+  // Debug: log when front/back changes
+  useEffect(() => {
+    log(
+      "RENDER/ITEMS",
+      "front=",
+      itemKey(frontItem),
+      "back=",
+      backItem !== undefined ? itemKey(backItem) : "none",
+      "resetKey=",
+      resetKey,
+    );
+  }, [frontItem, backItem, resetKey]);
+
   const onLayout = (e: LayoutChangeEvent) => {
-    setWidth(e.nativeEvent.layout.width || 1);
+    const w = e.nativeEvent.layout.width || 1;
+    setWidth(w);
+    log("onLayout width =", w);
   };
 
   // Clamp ratios
@@ -180,6 +147,17 @@ export default function CardsDeck<TFront, TBack = TFront>({
 
   const rightOverlayWidthPx =
     width * Math.min(rightAction?.widthRatio ?? maxOverlayRatio, maxOverlayRatio);
+
+  // Debug: log computed layout numbers when width changes
+  useEffect(() => {
+    log("METRICS", {
+      width,
+      thresholdRatio,
+      commitPx,
+      leftOverlayWidthPx,
+      rightOverlayWidthPx,
+    });
+  }, [width, thresholdRatio, commitPx, leftOverlayWidthPx, rightOverlayWidthPx]);
 
   // Opacity grows 0 -> overlayMaxOpacity until commitPx
   const approveOpacity = useMemo(
@@ -212,97 +190,211 @@ export default function CardsDeck<TFront, TBack = TFront>({
   }, [backCardDepthEffect, translateX, commitPx]);
 
   /**
-   * Executes the final animated swipe out of the screen.
-   * Wrapped in useCallback to satisfy exhaustive-deps in the panResponder useMemo.
+   * RESET behavior (instead of remounting with key)
+   */
+  useEffect(() => {
+    log("RESET EFFECT fired", {
+      resetKey,
+      isCommitting: isCommittingRef.current,
+      committed: committedThisGestureRef.current,
+    });
+
+    translateX.stopAnimation(() => {
+      translateX.setValue(0);
+    });
+
+    isCommittingRef.current = false;
+    committedThisGestureRef.current = false;
+    lastCommitAtRef.current = 0;
+  }, [resetKey, translateX]);
+
+  /**
+   * Commit swipe (animate out + notify parent)
    */
   const commitSwipe = useCallback(
     (direction: SwipeDirection) => {
+      log("commitSwipe CALLED", {
+        direction,
+        isCommitting: isCommittingRef.current,
+        committed: committedThisGestureRef.current,
+        width,
+        commitPx,
+      });
+
+      if (isCommittingRef.current) {
+        log("commitSwipe ABORT: already committing");
+        return;
+      }
+      if (committedThisGestureRef.current) {
+        log("commitSwipe ABORT: already committed this gesture");
+        return;
+      }
+
       const now = Date.now();
-      if (now - lastCommitAtRef.current < 250) return; // anti double commit (device safe)
+      if (now - lastCommitAtRef.current < 250) {
+        log("commitSwipe ABORT: anti-double-commit window", now - lastCommitAtRef.current);
+        return;
+      }
       lastCommitAtRef.current = now;
 
-      // Lock strict: once committing started, ignore everything until release
-      if (isCommittingRef.current) return;
-
       isCommittingRef.current = true;
-      committedThisGestureRef.current = true;
+      committedThisGestureRef.current = true; // ✅ IMPORTANT
+
+      // snap to edge (optional)
+      translateX.stopAnimation(() => {
+        translateX.setValue(direction === "left" ? -commitPx : commitPx);
+      });
 
       const toX = direction === "left" ? -width * 1.2 : width * 1.2;
+
+      log("commitSwipe ANIM start", { toX });
 
       Animated.timing(translateX, {
         toValue: toX,
         duration: 180,
         useNativeDriver: true,
-      }).start(() => {
-        onSwipeCommit?.(direction);
+      }).start(({ finished }) => {
+        log("commitSwipe ANIM end", { finished });
+
+        try {
+          onSwipeCommit?.(direction);
+          log("onSwipeCommit fired", { direction });
+        } catch (e) {
+          log("onSwipeCommit threw", e);
+        }
+
         translateX.setValue(0);
 
-        // unlock HERE (do not rely on Release)
+        // unlock
         isCommittingRef.current = false;
-
-        // keep this true until next Grant to avoid re-trigger during same touch
-        // committedThisGestureRef.current stays true
+        // keep committedThisGestureRef true until next Grant
       });
     },
-    [width, translateX, onSwipeCommit],
-  );
-
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onPanResponderTerminationRequest: () => false,
-
-        onPanResponderTerminate: () => {
-          // Gesture was interrupted (system/scroll/etc.)
-          isCommittingRef.current = false;
-          committedThisGestureRef.current = false;
-
-          Animated.spring(translateX, {
-            toValue: 0,
-            friction: 6,
-            useNativeDriver: true,
-          }).start();
-        },
-        onMoveShouldSetPanResponder: (_, g) => Math.abs(g.dx) > 5 && Math.abs(g.dy) < 20,
-
-        onPanResponderMove: (_, g) => {
-          if (isCommittingRef.current || committedThisGestureRef.current) return;
-
-          const direction: SwipeDirection = g.dx < 0 ? "left" : "right";
-          const progress = Math.min(Math.abs(g.dx) / (commitPx || 1), 1);
-
-          onSwipeProgress?.({ dx: g.dx, progress, direction });
-
-          if (Math.abs(g.dx) >= commitPx) {
-            committedThisGestureRef.current = true;
-            commitSwipe(direction);
-            return;
-          }
-
-          translateX.setValue(g.dx);
-        },
-
-        onPanResponderRelease: () => {
-          if (committedThisGestureRef.current) return;
-
-          Animated.spring(translateX, {
-            toValue: 0,
-            friction: 6,
-            useNativeDriver: true,
-          }).start(() => onSwipeCancel?.());
-        },
-        onPanResponderGrant: () => {
-          // new gesture starts
-          committedThisGestureRef.current = false;
-          // keep isCommittingRef as-is (should be false after previous release)
-        },
-      }),
-    [commitPx, commitSwipe, onSwipeCancel, onSwipeProgress, translateX],
+    [commitPx, width, translateX, onSwipeCommit],
   );
 
   /**
-   * Back content fallback:
-   * even if renderBack is not provided, we still render a back card so overlays can be visible.
+   * PanResponder
+   */
+  const panResponder = useMemo(() => {
+    log("PanResponder CREATED (useMemo)");
+
+    return PanResponder.create({
+      onPanResponderTerminationRequest: () => {
+        log("terminationRequest -> false");
+        return false;
+      },
+
+      onMoveShouldSetPanResponder: (_, g) => {
+        const should = Math.abs(g.dx) > 5 && Math.abs(g.dy) < 20;
+        if (should) {
+          throttle100(() =>
+            log("onMoveShouldSetPanResponder = true", {
+              dx: g.dx,
+              dy: g.dy,
+              isCommitting: isCommittingRef.current,
+              committed: committedThisGestureRef.current,
+            }),
+          );
+        }
+        return should;
+      },
+
+      onMoveShouldSetPanResponderCapture: (_, g) => {
+        const should = Math.abs(g.dx) > 5 && Math.abs(g.dy) < 20;
+        if (should) {
+          throttle100(() =>
+            log("onMoveShouldSetPanResponderCapture = true", {
+              dx: g.dx,
+              dy: g.dy,
+              isCommitting: isCommittingRef.current,
+              committed: committedThisGestureRef.current,
+            }),
+          );
+        }
+        return should;
+      },
+
+      onPanResponderGrant: () => {
+        log("GRANT", {
+          isCommitting: isCommittingRef.current,
+          committedBefore: committedThisGestureRef.current,
+        });
+
+        // new gesture starts
+        committedThisGestureRef.current = false;
+      },
+
+      onPanResponderMove: (_, g) => {
+        if (isCommittingRef.current || committedThisGestureRef.current) return;
+
+        const direction: SwipeDirection = g.dx < 0 ? "left" : "right";
+        const progress = Math.min(Math.abs(g.dx) / (commitPx || 1), 1);
+
+        // throttled move logs
+        throttle100(() => {
+          log("MOVE", {
+            dx: g.dx,
+            dy: g.dy,
+            direction,
+            progress,
+            commitPx,
+          });
+        });
+
+        onSwipeProgress?.({ dx: g.dx, progress, direction });
+
+        if (Math.abs(g.dx) >= commitPx) {
+          log("THRESHOLD reached -> commitSwipe", {
+            dx: g.dx,
+            commitPx,
+            direction,
+          });
+          commitSwipe(direction);
+          return;
+        }
+
+        translateX.setValue(g.dx);
+      },
+
+      onPanResponderRelease: () => {
+        log("RELEASE", {
+          isCommitting: isCommittingRef.current,
+          committed: committedThisGestureRef.current,
+        });
+
+        if (isCommittingRef.current || committedThisGestureRef.current) return;
+
+        Animated.spring(translateX, {
+          toValue: 0,
+          friction: 6,
+          useNativeDriver: true,
+        }).start(({ finished }) => {
+          log("CANCEL spring end", { finished });
+          onSwipeCancel?.();
+        });
+      },
+
+      onPanResponderTerminate: () => {
+        log("TERMINATE", {
+          isCommitting: isCommittingRef.current,
+          committed: committedThisGestureRef.current,
+        });
+
+        isCommittingRef.current = false;
+        committedThisGestureRef.current = false;
+
+        Animated.spring(translateX, {
+          toValue: 0,
+          friction: 6,
+          useNativeDriver: true,
+        }).start(({ finished }) => log("TERMINATE spring end", { finished }));
+      },
+    });
+  }, [commitPx, commitSwipe, onSwipeCancel, onSwipeProgress, translateX]);
+
+  /**
+   * Back content fallback
    */
   const backContent =
     backItem !== undefined ? (
@@ -313,7 +405,7 @@ export default function CardsDeck<TFront, TBack = TFront>({
       )
     ) : null;
 
-  // How much of the overlay should be revealed (0..overlayWidthPx)
+  // How much of the overlay should be revealed
   const revealLeftPx = useMemo(
     () =>
       translateX.interpolate({
@@ -324,11 +416,6 @@ export default function CardsDeck<TFront, TBack = TFront>({
     [translateX, commitPx, leftOverlayWidthPx],
   );
 
-  /**
-   * RED fill translation:
-   * - dx = 0        -> fill is fully outside to the right (+width)
-   * - dx = -commitPx -> fill is fully in place (0)
-   */
   const trashFillTranslateX = useMemo(
     () =>
       translateX.interpolate({
@@ -342,15 +429,18 @@ export default function CardsDeck<TFront, TBack = TFront>({
   return (
     <View style={[styles.container, containerStyle]} onLayout={onLayout}>
       <View style={styles.deck}>
-        {/* BACK card (next) - render if backItem exists */}
+        {/* BACK card (next) */}
         {backItem !== undefined ? (
-          <Animated.View style={[styles.layer, { transform: [{ scale: backScale }] }]}>
+          <Animated.View
+            // back should be mostly visual; if you suspect it steals touches, uncomment:
+            // pointerEvents="none"
+            style={[styles.layer, { transform: [{ scale: backScale }] }]}
+          >
             <Card
-              // Default to flex:1 so you don't need width/height in HomeScreen
               style={[{ flex: 1, height: "100%" }, cardStyle || {}]}
               renderOverlay={() => (
                 <>
-                  {/* GREEN on LEFT revealed gap (swipe RIGHT) */}
+                  {/* GREEN (left gap) */}
                   {leftAction ? (
                     <Animated.View
                       style={[
@@ -365,7 +455,6 @@ export default function CardsDeck<TFront, TBack = TFront>({
                         },
                       ]}
                     >
-                      {/* This inner view slides so the visible part grows with swipe */}
                       <Animated.View
                         style={{
                           position: "absolute",
@@ -386,7 +475,6 @@ export default function CardsDeck<TFront, TBack = TFront>({
                         }}
                       />
 
-                      {/* Icon stays centered in the reveal container */}
                       <Icon
                         {...leftAction.icon}
                         size={leftAction.iconSize ?? 26}
@@ -395,7 +483,7 @@ export default function CardsDeck<TFront, TBack = TFront>({
                     </Animated.View>
                   ) : null}
 
-                  {/* RED on RIGHT revealed gap (swipe LEFT) */}
+                  {/* RED (right gap) */}
                   {rightAction ? (
                     <Animated.View
                       style={[
@@ -437,7 +525,7 @@ export default function CardsDeck<TFront, TBack = TFront>({
           </Animated.View>
         ) : null}
 
-        {/* FRONT card (current draggable) */}
+        {/* FRONT card (draggable) */}
         <Animated.View
           testID="deck-front-card"
           style={[styles.layer, { transform: [{ translateX }] }]}

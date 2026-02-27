@@ -3,55 +3,72 @@
  * @description Écran principal connectant le deck de cartes à Redux et à la persistance SQLite.
  * Gère la navigation dans les médias et l'enregistrement des décisions de l'utilisateur.
  */
-import React from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { View, Text, Image } from "react-native";
 import CardsDeck from "@ui/cards-deck/CardsDeck";
 import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { mediaScanActions } from "@store/mediaScanSlice";
+import { AppMediaType, MediaItem, mediaScanActions } from "@store/mediaScanSlice";
 import { selectFrontItem, selectBackItem } from "@store/mediaSelectors";
 import { useMedia } from "@hooks/useMedia.hook";
+import { VideoContainer } from "@ui/video-player/VideoContainer";
 
 export default function HomeScreen() {
-  console.log(`HomeScreen rendered `);
-
+  const { items, cursor } = useAppSelector((state) => state.mediaScan);
   const dispatch = useAppDispatch();
-
-  /** * 🧠 Récupération du hook global pour la persistance.
-   * handleSwipeCommit s'occupe de l'écriture en base SQLite.
-   */
   const { handleSwipeCommit } = useMedia();
 
   const frontItem = useAppSelector(selectFrontItem);
   const backItem = useAppSelector(selectBackItem);
 
-  /**
-   * Helper pour le rendu des médias.
-   */
-  const render = (item: any, label: string) => {
-    if (item.type === "photo") {
-      return <Image source={{ uri: item.uri }} style={{ flex: 1 }} resizeMode="cover" />;
-    }
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>{label} VIDEO</Text>
-        <Text>{item.name}</Text>
-      </View>
-    );
-  };
+  const frontItemRef = useRef(frontItem);
+  useEffect(() => {
+    frontItemRef.current = frontItem;
+  }, [frontItem]);
 
-  /**
-   * 🚀 Gestionnaire de swipe synchronisé.
-   * Combine la mise à jour de l'UI (Redux) et la sauvegarde (SQLite).
-   */
-  const onCommit = (direction: "left" | "right") => {
-    if (!frontItem) return;
+  const TAB_BAR_HEIGHT = 60;
 
-    // 1. Sauvegarde la décision en base de données (Metadata Ledger)
-    handleSwipeCommit(frontItem.id, direction);
+  const renderMedia = useCallback(
+    (item: MediaItem) => {
+      const isActive = items[cursor]?.id === item.id;
 
-    // 2. Passe à l'item suivant dans Redux pour l'animation UI
-    dispatch(mediaScanActions.next());
-  };
+      if (item.type === AppMediaType.PHOTO) {
+        return (
+          <Image key={item.id} source={{ uri: item.uri }} style={{ flex: 1 }} resizeMode="cover" />
+        );
+      }
+
+      if (item.type === AppMediaType.VIDEO) {
+        return (
+          <VideoContainer
+            key={item.id}
+            uri={item.uri}
+            isActive={isActive}
+            tabBarHeight={TAB_BAR_HEIGHT}
+          />
+        );
+      }
+
+      return (
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text>Format non supporté</Text>
+          <Text>{item.name}</Text>
+        </View>
+      );
+    },
+    [items, cursor],
+  );
+
+  // ✅ STABLE callback (doesn't change every render)
+  const onCommit = useCallback(
+    async (direction: "left" | "right") => {
+      const item = frontItemRef.current;
+      if (!item) return;
+
+      await handleSwipeCommit(item.id, direction);
+      dispatch(mediaScanActions.next());
+    },
+    [handleSwipeCommit, dispatch],
+  );
 
   if (!frontItem) {
     return (
@@ -64,28 +81,25 @@ export default function HomeScreen() {
   return (
     <View style={{ flex: 1 }}>
       <CardsDeck
+        // ✅ REMOVE THIS:
         key={frontItem.id}
         containerStyle={{ flex: 1 }}
         cardStyle={{ borderRadius: 0 }}
         frontItem={frontItem}
         backItem={backItem}
         overlayMaxOpacity={0.4}
-        renderFront={(item) => render(item, "FRONT")}
-        renderBack={(item) => render(item, "BACK")}
+        renderFront={(item) => renderMedia(item)}
+        renderBack={(item) => renderMedia(item)}
         leftAction={{
-          color: "#34c759", // Green for 'Keep'
+          color: "#34c759",
           icon: { type: "vector", name: "checkmark-circle" },
           widthRatio: 0.3,
         }}
         rightAction={{
-          color: "#ff3b30", // Red for 'Delete'
+          color: "#ff3b30",
           icon: { type: "vector", name: "trash" },
           widthRatio: 0.3,
         }}
-        /**
-         * 🎯 Appel de notre gestionnaire synchronisé.
-         * On passe la direction reçue de CardsDeck au hook.
-         */
         onSwipeCommit={onCommit}
       />
     </View>

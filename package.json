@@ -17,7 +17,7 @@
     "test": "jest",
     "test:watch": "jest  --watch",
     "test:clean": "jest  --clearCache && jest --watchAll=false",
-    "test:clean:update-snaphots": "jest  --clearCache && jest --watchAll=false -u",
+    "test:clean:update-snapshots": "jest  --clearCache && jest --watchAll=false -u",
     "storybook-generate": "sb-rn-get-stories",
     "storybook": "npm run storybook-generate && cross-env EXPO_PUBLIC_STORYBOOK_ENABLED=true expo start --dev-client",
     "storybook:expo-go": "npm run storybook-generate && expo start"
@@ -53,6 +53,7 @@
     "expo-status-bar": "~3.0.9",
     "expo-symbols": "~1.0.8",
     "expo-system-ui": "~6.0.9",
+    "expo-video": "^55.0.10",
     "expo-web-browser": "~15.0.10",
     "react": "19.1.0",
     "react-dom": "19.1.0",

@@ -1,4 +1,5 @@
 import HomeScreen from "../screens/home-screen/HomeScreen";
+import { FocusUnmount } from "./FocusUnmount.wrapper";
 
 /**
  * Route wrapper for the "Home" tab.
@@ -7,5 +8,9 @@ import HomeScreen from "../screens/home-screen/HomeScreen";
  * * @returns The rendered {@link HomeScreen} UI.
  */
 export default function HomeTab() {
-  return <HomeScreen />;
+  return (
+    <FocusUnmount>
+      <HomeScreen />
+    </FocusUnmount>
+  );
 }

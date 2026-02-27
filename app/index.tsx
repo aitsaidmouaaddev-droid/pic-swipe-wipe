@@ -1,4 +1,10 @@
 import { Redirect } from "expo-router";
+/* import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "Cannot set prop 'player' on view 'class expo.modules.video.SurfaceVideoView'",
+  "Cannot use shared object that was already released",
+]); */
 
 /**
  * Absolute root entry point for the application routing.

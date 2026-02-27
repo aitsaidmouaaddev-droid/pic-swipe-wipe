@@ -12,6 +12,7 @@ export interface ThemeTokens {
     danger: string;
     success: string; // Added for the "Keep" swipe action
     border: string; // Added for the 'outline' button variant
+    track: string; // Kept for backward compatibility with existing styles
   };
   spacing: {
     xs: number;
@@ -46,6 +47,7 @@ export const darkTheme: ThemeTokens = {
     danger: "#F87171",
     success: "#4ADE80",
     border: "#334155",
+    track: "rgba(255, 255, 255, 0.2)", // Semi-transparent white for progress bars
   },
   spacing: {
     xs: 4,

@@ -12,6 +12,7 @@ export const darkTheme: ThemeTokens = {
     danger: "#F87171",
     success: "#4ADE80",
     border: "#334155",
+    track: "#c4269dff", // Kept for backward compatibility with existing styles
   },
   spacing: {
     xs: 4,

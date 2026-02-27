@@ -7,8 +7,8 @@ import { useEffect } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
 import * as NavigationBar from "expo-navigation-bar";
 import { StatusBar } from "expo-status-bar";
-import Constants from "expo-constants";
 import StorybookUI from "../.rnstorybook";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 /**
  * Root layout and global provider wrapper for the entire application.
@@ -43,14 +43,16 @@ export default function Layout() {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <View style={{ flex: 1, borderRadius: 0, overflow: "visible" }}>
-          <StatusBar hidden />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <View style={{ flex: 1, borderRadius: 0, overflow: "visible" }}>
+            <StatusBar hidden />
 
-          {/* Toggle between the application routing (Slot) and the 
+            {/* Toggle between the application routing (Slot) and the 
             component sandbox (StorybookUI) based on the terminal command.
           */}
-          {SHOW_STORYBOOK ? <StorybookUI /> : <Slot />}
-        </View>
+            {SHOW_STORYBOOK ? <StorybookUI /> : <Slot />}
+          </View>
+        </GestureHandlerRootView>
       </ThemeProvider>
     </Provider>
   );

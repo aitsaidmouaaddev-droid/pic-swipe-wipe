@@ -31,4 +31,31 @@ jest.mock("expo-modules-core", () => ({
   NativeModulesProxy: { NativeUnimoduleProxy: {} },
 }));
 
+// Mock de expo-video
+jest.mock("expo-video", () => ({
+  createVideoPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    pause: jest.fn(),
+    replaceAsync: jest.fn(() => Promise.resolve()),
+    seekBy: jest.fn(),
+    release: jest.fn(),
+    addListener: jest.fn(() => ({ remove: jest.fn() })),
+    playing: false,
+    muted: false,
+    currentTime: 0,
+    duration: 10,
+  })),
+  VideoView: "VideoView",
+}));
+
+// Mock de expo (useEventListener)
+jest.mock("expo", () => ({
+  useEventListener: jest.fn(),
+}));
+
+// ✅ Required for any component using react-native-reanimated hooks
+jest.mock("react-native-reanimated", () => require("react-native-reanimated/mock"));
+
+jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper", () => ({}), { virtual: true });
+
 global.process.env.EXPO_OS = "ios";

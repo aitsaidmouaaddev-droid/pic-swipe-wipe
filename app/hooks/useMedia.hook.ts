@@ -5,7 +5,6 @@
 import { useCallback } from "react";
 import { mediaPersistenceService } from "../services/mediaPersistenceService";
 import { useAppDispatch } from "../store/hooks";
-import { mediaScanActions } from "../store/mediaScanSlice";
 
 export const useMedia = () => {
   const dispatch = useAppDispatch();
@@ -20,12 +19,8 @@ export const useMedia = () => {
       try {
         const verdict = direction === "right" ? "keep" : "trash";
 
-        // 1. Sauvegarde en base de données
         await mediaPersistenceService.recordDecision(assetId, verdict);
         console.log(`✅ Saved to SQLite: ${assetId} as ${verdict}`);
-
-        // 2. Avance le curseur Redux pour la carte suivante
-        dispatch(mediaScanActions.next());
       } catch (error) {
         console.error("❌ Failed to save decision:", error);
       }

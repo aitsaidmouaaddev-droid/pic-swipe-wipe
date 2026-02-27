@@ -13,6 +13,7 @@ module.exports = defineConfig([
       ".expo/*",
       "docs/*",
       ".rnstorybook/*",
+      "**/*.test.tsx",
       "**/*.stories.tsx", // 🎯 Ignore all story files
       "**/*.stories.ts", // 🎯 Ignore TS-only stories
       "**/storybook.requires.ts", // Ignore the auto-generated file
