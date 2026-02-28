@@ -3,6 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
+    "gen:c:ui": "node scripts/gen-ui.js",
     "start": "expo start -c",
     "expo-build-dev": "eas build --platform android --profile development",
     "reset-project": "node ./scripts/reset-project.js",
@@ -17,7 +18,7 @@
     "test": "jest",
     "test:watch": "jest  --watch",
     "test:clean": "jest  --clearCache && jest --watchAll=false",
-    "test:clean:update-snapshots": "jest  --clearCache && jest --watchAll=false -u",
+    "test:clean:u": "jest  --clearCache && jest --watchAll=false -u",
     "storybook-generate": "sb-rn-get-stories",
     "storybook": "npm run storybook-generate && cross-env EXPO_PUBLIC_STORYBOOK_ENABLED=true expo start --dev-client",
     "storybook:expo-go": "npm run storybook-generate && expo start"

@@ -3,6 +3,8 @@
 export interface ThemeTokens {
   mode: "light" | "dark"; // Added mode for easier logic in components
   colors: {
+    onSurface: string;
+    shadow: string;
     background: string;
     surface: string; // Added for Cards/Sidebars
     text: string;

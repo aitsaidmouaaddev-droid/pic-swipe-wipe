@@ -11,6 +11,7 @@ module.exports = defineConfig([
       "jest.*",
       "dist/*",
       ".expo/*",
+      "scripts/*",
       "docs/*",
       ".rnstorybook/*",
       "**/*.test.tsx",
