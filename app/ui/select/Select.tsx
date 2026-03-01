@@ -15,7 +15,8 @@ import {
 } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
 import Icon, { IconProps } from "@ui/icon/Icon";
-import { makeSelectStyles } from "./select.style";
+import makeSelectStyles, { SelectStyles } from "./select.style";
+import { useResultedStyle } from "@hooks/useResultedStyle.hook";
 
 export interface SelectOption {
   label: string;
@@ -37,6 +38,7 @@ export interface SelectProps {
   /** Mandatory icon for the trigger box */
   triggerIcon?: IconProps;
   testID?: string;
+  stylesOverride?: Partial<SelectStyles>;
 }
 
 export default function Select({
@@ -49,10 +51,11 @@ export default function Select({
   offset = 4,
   triggerIcon = { type: "vector", name: "chevron-down" },
   testID,
+  stylesOverride,
 }: SelectProps) {
   const { theme } = useTheme();
   // ✅ On mémoïse les styles avec le thème en dépendance
-  const styles = makeSelectStyles(theme);
+  const styles = useResultedStyle<SelectStyles>(theme, makeSelectStyles, stylesOverride);
   const [isOpen, setIsOpen] = useState(false);
   const [layout, setLayout] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const triggerRef = useRef<View>(null);

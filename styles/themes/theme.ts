@@ -1,3 +1,5 @@
+import type { StyleProp } from "react-native";
+
 // This interface describes what a "theme" must contain.
 // Any theme (dark, light, custom) must follow this shape.
 export interface ThemeTokens {
@@ -37,37 +39,8 @@ export interface ThemeTokens {
   };
 }
 
-export const darkTheme: ThemeTokens = {
-  mode: "dark",
-  colors: {
-    background: "#020617", // True deep navy (looks amazing on AMOLED)
-    surface: "#0F172A", // Lighter navy for cards
-    text: "#F8FAFC",
-    mutedText: "#94A3B8",
-    primary: "#60A5FA", // Brighter blue for contrast
-    secondary: "#1E293B",
-    danger: "#F87171",
-    success: "#4ADE80",
-    border: "#334155",
-    track: "rgba(255, 255, 255, 0.2)", // Semi-transparent white for progress bars
-  },
-  spacing: {
-    xs: 4,
-    sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
-  },
-  radius: {
-    sm: 6,
-    md: 12,
-    lg: 20,
-    pill: 999,
-  },
-  typography: {
-    title: 24,
-    subtitle: 18,
-    body: 16,
-    caption: 12,
-  },
-};
+/**
+ * Override type: for each style key, allow any React Native style prop.
+ * (works with ViewStyle/TextStyle/ImageStyle AND with StyleSheet IDs)
+ */
+export type StylesOverride<S> = Partial<Record<keyof S, StyleProp<any>>>;

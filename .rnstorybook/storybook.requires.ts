@@ -7,13 +7,13 @@ import "@storybook/addon-ondevice-actions/register";
 const normalizedStories = [
   {
     titlePrefix: "",
-    directory: "./app/ui",
+    directory: "./app",
     files: "**/*.stories.tsx",
     importPathMatcher:
       /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.stories\.tsx)$/,
     // @ts-ignore
     req: require.context(
-      "../app/ui",
+      "../app",
       true,
       /^\.(?:(?:^|[\\/]|(?:(?:(?!(?:^|[\\/])\.).)*?)[\\/])(?!\.)(?=.)[^\\/]*?\.stories\.tsx)$/,
     ),

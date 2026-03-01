@@ -16,6 +16,7 @@ module.exports = function (api) {
         {
           extensions: [".tsx", ".ts", ".js", ".json"],
           alias: {
+            "@components/*": ["./app/components"],
             "@hooks/*": ["./app/hooks"],
             "@mocks/*": ["./mocks"],
             "@themes/*": ["./styles/themes"],

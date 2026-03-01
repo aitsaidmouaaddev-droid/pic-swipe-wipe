@@ -6,9 +6,10 @@ import { View } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
 import { useTheme } from "@themes/ThemeContext";
-import { makeVideoStyles } from "./videoPlayer.style";
+import { VideoPlayerShape } from "./videoPlayer.style";
 
 export interface ProgressBarProps {
+  styles: VideoPlayerShape["progressBar"];
   progress: number; // Position actuelle (0 à 1)
   bottomOffset: number;
   onScrubStart: () => void; // Quand on commence à glisser
@@ -22,9 +23,9 @@ export const VideoProgressBar = ({
   onScrubStart,
   onScrub,
   onScrubEnd,
+  styles,
 }: ProgressBarProps) => {
   const { theme } = useTheme();
-  const styles = makeVideoStyles(theme);
   const [width, setWidth] = React.useState(0);
 
   // Utilisation d'un Pan Gesture configuré pour être réactif
@@ -49,12 +50,12 @@ export const VideoProgressBar = ({
   return (
     <View
       onLayout={(e) => setWidth(e.nativeEvent.layout.width)}
-      style={[styles.progressContainer, { bottom: bottomOffset }]}
+      style={[styles.container, { bottom: bottomOffset }]}
       testID="video-progress-bar"
     >
       <GestureDetector gesture={gesture}>
         {/* Important : cette View doit couvrir toute la zone de contact */}
-        <View style={styles.progressHitSlop}>
+        <View style={styles.hitSlop}>
           <View style={styles.track}>
             <View style={[styles.fill, { width: `${progress * 100}%` }]} />
             <View style={[styles.knob, { left: `${progress * 100}%` }]} />

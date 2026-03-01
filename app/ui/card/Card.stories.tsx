@@ -10,7 +10,7 @@ import { useTheme } from "@themes/ThemeContext";
  * Decorated with a dark background to make the card's shadows pop.
  */
 const meta: Meta<typeof Card> = {
-  title: "Atomic/Card",
+  title: "UI/Card",
   component: Card,
   decorators: [
     (Story) => (

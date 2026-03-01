@@ -9,7 +9,7 @@ import ProgressBar from "./ProgressBar";
  * in the middle of the device screen during previews.
  */
 const meta: Meta<typeof ProgressBar> = {
-  title: "Components/ProgressBar",
+  title: "UI/ProgressBar",
   component: ProgressBar,
   argTypes: {
     // 🎯 This adds a slider (0 to 1) in the Storybook "Controls" tab

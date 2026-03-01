@@ -1,49 +1,82 @@
-import { StyleSheet } from "react-native";
-import type { ThemeTokens } from "@themes/theme";
+import type { StylesOverride, ThemeTokens } from "@themes/theme";
+import { StyleSheet, ViewStyle } from "react-native";
+import { CardStyles } from "@ui/card/card.style";
 
-/**
- * Creates themed styles for {@link CardsDeck}.
- */
-export default function makeCardsDeckStyles(theme: ThemeTokens) {
-  return StyleSheet.create({
-    /**
-     * Deck container must receive size from parent (usually flex: 1 on screen).
-     */
+export type CardsDeckShape = {
+  container: ViewStyle;
+  deck: ViewStyle;
+  layer: ViewStyle;
+  card: CardStyles; // Objet imbriqué (base, content, overlay, etc.)
+  overlayCommon: ViewStyle;
+  overlayLeft: ViewStyle;
+  overlayRight: ViewStyle;
+  fillLeft: ViewStyle;
+  fillRight: ViewStyle;
+};
+
+export default function makeCardsDeckStyles(theme: ThemeTokens): CardsDeckShape {
+  // 1. On crée les styles "plats" via StyleSheet pour la performance et la validation
+  const flatStyles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors.background,
+      height: "100%",
+      width: "100%",
+      backgroundColor: "transparent", // On laisse le fond transparent pour que les cartes gèrent leur propre background
     },
-
-    /**
-     * Holds stacked absolute layers.
-     */
     deck: {
       flex: 1,
+      position: "relative",
     },
-
-    /**
-     * Absolute fill layer for each stacked card.
-     */
     layer: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
+      ...StyleSheet.absoluteFillObject,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "transparent", // Important pour que les ombres des cartes soient visibles
     },
-
-    /**
-     * Shared overlay position style.
-     */
     overlayCommon: {
       position: "absolute",
       top: 0,
       bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-    },
-    revealClip: {
       overflow: "hidden",
     },
+    overlayLeft: {
+      left: 0,
+      borderTopLeftRadius: 999,
+      borderBottomLeftRadius: 999,
+    },
+    overlayRight: {
+      right: 0,
+      borderTopRightRadius: 999,
+      borderBottomRightRadius: 999,
+    },
+    fillLeft: {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+    },
+    fillRight: {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      right: 0,
+    },
   });
+
+  // 2. On retourne l'objet complet en y injectant l'objet card (non géré par StyleSheet)
+  return {
+    ...flatStyles,
+    card: {
+      base: {
+        width: "100%",
+        height: "100%",
+        backgroundColor: "transparent", // Optionnel : valeur par défaut
+      },
+      // Tu peux ajouter ici d'autres clés de CardStyles si nécessaire (overlay, content...)
+    },
+  };
 }
+
+export type CardsDeckStyles = StylesOverride<CardsDeckShape>;

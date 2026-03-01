@@ -3,7 +3,9 @@ import { View, Pressable, Text } from "react-native";
 import type { TabConfigItem, TabName } from "./tabs.config";
 import Icon from "@ui/icon/Icon";
 import { ThemeTokens } from "@themes/theme";
-import makeTabBarStyles from "./tabBar.style";
+import makeTabBarStyles, { TabBarStyles } from "./tabBar.style";
+import { useTheme } from "@themes/ThemeContext";
+import { useResultedStyle } from "@hooks/useResultedStyle.hook";
 
 /**
  * Icon position relative to label.
@@ -18,9 +20,6 @@ export type TabIconPosition = "top" | "bottom" | "left" | "right";
  * - no react-navigation
  */
 export interface TabBarProps {
-  /** Theme tokens used to style the tab bar. */
-  theme: ThemeTokens;
-
   /** Tabs displayed in the bar (single source of truth). */
   tabs: TabConfigItem[];
 
@@ -59,6 +58,8 @@ export interface TabBarProps {
    * @defaultValue 22
    */
   iconSize?: number;
+
+  stylesOverride?: Partial<TabBarStyles>;
 }
 
 /**
@@ -66,7 +67,6 @@ export interface TabBarProps {
  * Can be used in Expo Router, React Navigation, and Storybook.
  */
 export default function TabBar({
-  theme,
   tabs,
   activeTab,
   onTabPress,
@@ -75,9 +75,10 @@ export default function TabBar({
   iconPosition = "top",
   gap = 6,
   iconSize = 22,
+  stylesOverride,
 }: TabBarProps) {
-  const styles = makeTabBarStyles(theme);
-
+  const { theme } = useTheme();
+  const styles = useResultedStyle<TabBarStyles>(theme, makeTabBarStyles, stylesOverride);
   const direction = getFlexDirection(iconPosition);
 
   return (
@@ -99,6 +100,7 @@ export default function TabBar({
             style={({ pressed }) => [styles.item, pressed ? { opacity: 0.85 } : null]}
           >
             <View
+              testID={`tab-item-content-${tab.name}`}
               style={[
                 styles.itemContent,
                 { flexDirection: direction, gap: hasIcon && hasLabel ? gap : 0 },

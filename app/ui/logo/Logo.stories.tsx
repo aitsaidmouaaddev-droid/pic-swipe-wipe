@@ -8,7 +8,7 @@ import Logo from "./Logo";
  * Centered in a dark-ish container to make the pulsing effect clear.
  */
 const meta: Meta<typeof Logo> = {
-  title: "Atomic/Logo",
+  title: "UI/Logo",
   component: Logo,
   decorators: [
     (Story) => (

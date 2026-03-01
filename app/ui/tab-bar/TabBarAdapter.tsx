@@ -34,7 +34,6 @@ export default function TabBarAdapter({
 
   return (
     <TabBar
-      theme={theme}
       tabs={tabs}
       activeTab={activeTab}
       onTabPress={(tabName) => navigation.navigate(tabName)}

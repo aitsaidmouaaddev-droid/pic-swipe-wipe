@@ -20,7 +20,7 @@ const SelectStateWrapper = (props: any) => {
 };
 
 const meta: Meta<typeof Select> = {
-  title: "Atomic/Select",
+  title: "UI/Select",
   component: Select,
   decorators: [
     (Story) => (

@@ -1,26 +1,27 @@
 import { ThemeTokens } from "@themes/theme";
 import { StyleSheet } from "react-native";
 
-/**
- * Styles for {@link HomeScreen}.
- */
 export default function makeHomeScreenStyles(theme: ThemeTokens) {
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-      alignItems: "center",
-      justifyContent: "center",
-      padding: theme.spacing.lg,
+  return {
+    // Garde tes styles UI ici
+    ui: StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: theme.colors.background,
+      },
+      // ... tes autres styles (deckContainer, card, etc.)
+    }),
+
+    // Définition des styles pour les actions de swipe
+    actions: {
+      left: {
+        color: theme.colors.danger || "#ff3b30",
+        iconName: "trash" as const,
+      },
+      right: {
+        color: theme.colors.success || "#34c759",
+        iconName: "checkmark-circle" as const,
+      },
     },
-    title: {
-      color: theme.colors.text,
-      fontSize: theme.typography.title,
-    },
-    subtitle: {
-      marginTop: theme.spacing.sm,
-      color: theme.colors.mutedText,
-      fontSize: theme.typography.body,
-    },
-  });
+  };
 }

@@ -1,7 +1,8 @@
 import React from "react";
-import { View, type ViewStyle } from "react-native";
+import { View } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
-import makeCardStyles from "./card.style";
+import makeCardStyles, { CardStyles } from "./card.style";
+import { useResultedStyle } from "@hooks/useResultedStyle.hook";
 
 /**
  * Props for {@link Card}.
@@ -10,8 +11,8 @@ export interface CardProps {
   /** Card content. */
   children: React.ReactNode;
 
-  /** Optional style override (size/position/radius). */
-  style?: ViewStyle | ViewStyle[];
+  /** ✅ Système d'override typé pour base, content et overlayLayer */
+  stylesOverride?: Partial<CardStyles>;
 
   /**
    * Optional overlay renderer.
@@ -22,24 +23,21 @@ export interface CardProps {
 
 /**
  * Presentational Card component.
- *
- * Responsibilities:
- * - Layout + theming + shadow
- * - Render content + optional overlay layer
- *
- * NOT responsible for:
- * - gestures
- * - swipe progress
- * - deck stacking
+ * Totalement "dumb" : il ne gère que l'affichage et les styles résultants.
  */
-export default function Card({ children, style, renderOverlay }: CardProps) {
+export default function Card({ children, stylesOverride, renderOverlay }: CardProps) {
   const { theme } = useTheme();
-  const styles = makeCardStyles(theme);
+
+  // ✅ On génère les styles finaux (Fusion Thème + Overrides)
+  const styles = useResultedStyle<CardStyles>(theme, makeCardStyles, stylesOverride);
 
   return (
-    <View style={[styles.base, style]}>
+    <View style={styles.base}>
+      {/* Conteneur du contenu (Image, Vidéo, etc.) */}
       <View style={styles.content}>{children}</View>
-      {renderOverlay ? <View style={styles.overlayLayer}>{renderOverlay()}</View> : null}
+
+      {/* Couche d'overlay (Filtres de couleur Trash/Approved) */}
+      {renderOverlay && <View style={styles.overlayLayer}>{renderOverlay()}</View>}
     </View>
   );
 }

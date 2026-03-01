@@ -9,7 +9,7 @@ import { useTheme } from "@themes/ThemeContext";
  * We use a full-screen decorator to give the cards room to "fly out".
  */
 const meta: Meta<typeof CardsDeck> = {
-  title: "Components/CardsDeck",
+  title: "UI/CardsDeck",
   component: CardsDeck,
   decorators: [
     (Story) => (

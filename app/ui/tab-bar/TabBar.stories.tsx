@@ -5,7 +5,7 @@ import TabBar from "./TabBar";
 import { useTheme } from "@themes/ThemeContext";
 
 const meta: Meta<typeof TabBar> = {
-  title: "Components/TabBar",
+  title: "UI/TabBar",
   component: TabBar,
   decorators: [
     (Story) => (

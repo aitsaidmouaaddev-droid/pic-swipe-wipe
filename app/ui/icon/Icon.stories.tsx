@@ -21,7 +21,7 @@ const MockUserSvg: SvgIconComponent = ({ width, height, fill }) => (
  * We use an inline decorator to space out multiple icons in the "AllIcons" story.
  */
 const meta: Meta<typeof Icon> = {
-  title: "Atomic/Icon",
+  title: "UI/Icon",
   component: Icon,
   decorators: [
     (Story) => (

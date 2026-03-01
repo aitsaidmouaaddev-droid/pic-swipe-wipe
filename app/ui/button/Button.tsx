@@ -1,108 +1,34 @@
 import React from "react";
-import { Pressable, Text, View, StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useTheme } from "@themes/ThemeContext";
-import Icon, { IconProps } from "@ui/icon/Icon";
+import Icon from "@ui/icon/Icon";
+import { useResultedStyle } from "@hooks/useResultedStyle.hook";
 import makeButtonStyles, {
   ButtonSize,
   ButtonVariant,
   ButtonIconPosition,
   getButtonTextStyleKey,
   getButtonIconColor,
+  ButtonStyles,
   getButtonIconSize,
   getFlexDirection,
 } from "./button.style";
 
-/**
- * Props for {@link Button}.
- */
 export interface ButtonProps {
-  /**
-   * Optional label text.
-   * If omitted and an icon is provided, the button becomes "icon-only".
-   */
   label?: string;
-
-  /**
-   * Called when the user presses the button.
-   */
+  stylesOverride?: Partial<ButtonStyles>;
   onPress: () => void;
-
-  /**
-   * Visual style of the button.
-   * @defaultValue "primary"
-   */
   variant?: ButtonVariant;
-
-  /**
-   * Size preset.
-   * @defaultValue "md"
-   */
   size?: ButtonSize;
-
-  /**
-   * Disable interactions.
-   * @defaultValue false
-   */
   disabled?: boolean;
-
-  /**
-   * Single icon (useful for icon-only buttons).
-   * If you need two icons, use `startIcon` and/or `endIcon`.
-   */
-  icon?: IconProps;
-
-  /**
-   * Icon placed before the label (or top, depending on position).
-   */
-  startIcon?: IconProps;
-
-  /**
-   * Icon placed after the label (or bottom, depending on position).
-   */
-  endIcon?: IconProps;
-
-  /**
-   * Icon position relative to label.
-   * @defaultValue "left"
-   */
+  icon?: any; // Shortcut for startIcon
+  startIcon?: any;
+  endIcon?: any;
   iconPosition?: ButtonIconPosition;
-
-  /**
-   * Space between icon and text.
-   * @defaultValue 8
-   */
   gap?: number;
-
-  /**
-   * Optional style overrides for container.
-   */
-  style?: ViewStyle;
-
-  /**
-   * Optional style overrides for text.
-   */
-  textStyle?: TextStyle;
-
-  /**
-   * Optional test id.
-   */
   testID?: string;
 }
 
-/**
- * Atomic Button component built on top of {@link Pressable}.
- * * This component follows the design system tokens and supports multiple
- * visual variants, sizes, and flexible icon configurations.
- * * @example
- * ```tsx
- * <Button
- * label="Get Started"
- * variant="primary"
- * startIcon={{ type: 'vector', name: 'arrow-forward' }}
- * onPress={() => console.log('Pressed')}
- * />
- * ```
- */
 export default function Button({
   label,
   onPress,
@@ -114,74 +40,67 @@ export default function Button({
   endIcon,
   iconPosition = "left",
   gap = 8,
-  style,
-  textStyle,
+  stylesOverride,
   testID,
 }: ButtonProps) {
   const { theme } = useTheme();
-  const styles = makeButtonStyles(theme);
+
+  // ✅ Utilisation du hook pour fusionner Thème + Overrides
+  const styles = useResultedStyle<ButtonStyles>(theme, makeButtonStyles, stylesOverride);
 
   const textKey = getButtonTextStyleKey(variant);
   const iconColor = getButtonIconColor(theme, variant);
   const iconSize = getButtonIconSize(size);
 
-  // Determine what icons to render.
-  // `icon` is a convenience for icon-only or single-icon cases.
   const finalStartIcon = startIcon ?? icon;
   const finalEndIcon = endIcon;
 
   const hasText = Boolean(label);
   const hasAnyIcon = Boolean(finalStartIcon || finalEndIcon);
 
-  const contentDirection = getFlexDirection(iconPosition);
-
   return (
     <Pressable
       testID={testID}
       disabled={disabled}
       onPress={onPress}
+      // On combine les styles de base, de taille et de variante
       style={({ pressed }) => [
-        styles.base,
         styles[size],
         styles[variant],
+        styles.base,
         disabled && styles.disabled,
-        pressed && !disabled ? { opacity: 0.85 } : null,
-        style,
+        pressed && !disabled ? { opacity: 0.8 } : null,
       ]}
     >
       <View
         style={[
-          local.content,
-          { flexDirection: contentDirection, gap: hasText && hasAnyIcon ? gap : 0 },
+          styles.content, // ✅ Remplace "local"
+          {
+            flexDirection: getFlexDirection(iconPosition),
+            gap: hasText && hasAnyIcon ? gap : 0,
+          },
         ]}
       >
-        {finalStartIcon ? (
+        {finalStartIcon && (
           <Icon
             {...finalStartIcon}
             size={finalStartIcon.size ?? iconSize}
             color={finalStartIcon.color ?? iconColor}
+            stylesOverride={styles.icon} // ✅ On passe l'override à l'atome Icon
           />
-        ) : null}
+        )}
 
-        {hasText ? (
-          <Text style={[styles.textBase, styles[textKey], textStyle]}>{label}</Text>
-        ) : null}
+        {hasText && <Text style={[styles.textBase, styles[textKey]]}>{label}</Text>}
 
-        {finalEndIcon ? (
+        {finalEndIcon && (
           <Icon
             {...finalEndIcon}
             size={finalEndIcon.size ?? iconSize}
             color={finalEndIcon.color ?? iconColor}
+            stylesOverride={styles.icon}
           />
-        ) : null}
+        )}
       </View>
     </Pressable>
   );
 }
-
-const local = StyleSheet.create({
-  content: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

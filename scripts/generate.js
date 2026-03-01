@@ -1,19 +1,54 @@
 const fs = require("fs");
 const path = require("path");
 
-const componentArg = process.argv[2];
+/**
+ * Usage:
+ *   node generate.js Button -ui
+ *   node generate.js Button -c
+ *
+ * Flags:
+ *   -ui  => app/ui/composant/<folderName>
+ *   -c   => app/components/<folderName>
+ */
+
+const args = process.argv.slice(2);
+
+const hasUI = args.includes("-ui");
+const hasC = args.includes("-c");
+
+if ((hasUI && hasC) || (!hasUI && !hasC)) {
+  console.error('❌ Please pass exactly one flag: "-ui" or "-c".');
+  console.error("   Examples:");
+  console.error("   node generate.js Button -ui");
+  console.error("   node generate.js Button -c");
+  process.exit(1);
+}
+
+// component name = first arg that is not a flag
+const componentArg = args.find((a) => !a.startsWith("-"));
 
 if (!componentArg) {
   console.error("❌ Please provide a component name.");
   process.exit(1);
 }
 
-const componentName = componentArg.charAt(0).toUpperCase() + componentArg.slice(1);
+// Convert "video-player" / "video_player" / "video player" => "VideoPlayer"
+const toPascalCase = (str) =>
+  str
+    .replace(/[_\s]+/g, "-")
+    .split("-")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join("");
 
-const folderName = componentArg.toLowerCase();
+const componentName = toPascalCase(componentArg);
+const folderName = componentArg.toLowerCase().replace(/\s+/g, "-");
 const styleFileName = `${folderName}.style.ts`;
 
-const baseDir = path.join(__dirname, "..", "app/ui", folderName);
+// Choose base folder based on flag
+const targetDir = hasUI ? path.join("app", "ui", "composant") : path.join("app", "components");
+
+const baseDir = path.join(__dirname, "..", targetDir, folderName);
 
 if (fs.existsSync(baseDir)) {
   console.error("❌ Component already exists.");
@@ -62,12 +97,13 @@ describe("${componentName}", () => {
 });
 `;
 
+const storyTitlePrefix = hasUI ? "UI" : "Components";
 const storyTemplate = `import React from "react";
 import { View } from "react-native";
 import ${componentName} from "./${componentName}";
 
 export default {
-  title: "UI/${componentName}",
+  title: "${storyTitlePrefix}/${componentName}",
   component: ${componentName},
 };
 
@@ -87,4 +123,6 @@ fs.writeFileSync(path.join(baseDir, styleFileName), styleTemplate);
 fs.writeFileSync(path.join(baseDir, `${componentName}.test.tsx`), testTemplate);
 fs.writeFileSync(path.join(baseDir, `${componentName}.stories.tsx`), storyTemplate);
 
-console.log(`✅ UI component "${componentName}" generated successfully.`);
+console.log(
+  `✅ ${hasUI ? "UI" : "Component"} "${componentName}" generated successfully in "${targetDir}/${folderName}".`,
+);

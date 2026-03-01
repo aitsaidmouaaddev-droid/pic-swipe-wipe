@@ -21,7 +21,8 @@ import Icon from "@ui/icon/Icon";
 import { VideoProgressBar } from "./VideoProgressBar";
 import { VideoGestures } from "./VideoGestures";
 import Button from "@ui/button/Button";
-import { makeVideoStyles } from "./videoPlayer.style";
+import makeVideoStyles, { VideoPlayerStyles } from "./videoPlayer.style";
+import { useResultedStyle } from "@hooks/useResultedStyle.hook";
 
 /**
  * Offsets de positionnement pour les contrôles par rapport à la TabBar.
@@ -36,6 +37,8 @@ export interface VideoContainerProps {
   isActive: boolean;
   /** Hauteur de la TabBar pour décaler les contrôles du bas */
   tabBarHeight: number;
+
+  stylesOverride?: Partial<VideoPlayerStyles>;
 }
 
 /**
@@ -43,9 +46,14 @@ export interface VideoContainerProps {
  * Utilise un `playerRef` manuel pour éviter les fuites de mémoire (Shared Object Released)
  * lors des cycles de réutilisation des composants dans une liste.
  */
-export const VideoContainer = ({ uri, isActive, tabBarHeight }: VideoContainerProps) => {
+export const VideoContainer = ({
+  uri,
+  isActive,
+  tabBarHeight,
+  stylesOverride,
+}: VideoContainerProps) => {
   const { theme } = useTheme();
-  const styles = makeVideoStyles(theme);
+  const styles = useResultedStyle<VideoPlayerStyles>(theme, makeVideoStyles, stylesOverride);
 
   // États de lecture et d'UI
   const [isScrubbing, setIsScrubbing] = useState(false);
@@ -227,10 +235,15 @@ export const VideoContainer = ({ uri, isActive, tabBarHeight }: VideoContainerPr
       </View>
 
       {/* Zone de détection des gestes */}
-      <VideoGestures onTogglePlay={togglePlay} onSeek={(s) => player.seekBy(s)} />
+      <VideoGestures
+        styles={styles.gestures}
+        onTogglePlay={togglePlay}
+        onSeek={(s) => player.seekBy(s)}
+      />
 
       {/* Barre de progression interactive */}
       <VideoProgressBar
+        styles={styles.progressBar}
         progress={Math.min(1, Math.max(0, currentTime / (duration || 1)))}
         bottomOffset={tabBarHeight + PROGRESS_BAR_OFFSET}
         onScrubStart={onScrubStart}
@@ -250,7 +263,7 @@ export const VideoContainer = ({ uri, isActive, tabBarHeight }: VideoContainerPr
             name: isMuted ? "volume-mute" : "volume-high",
             color: theme.colors.primary,
           }}
-          style={styles.muteButton}
+          stylesOverride={styles.muteButton}
         />
       </View>
     </View>

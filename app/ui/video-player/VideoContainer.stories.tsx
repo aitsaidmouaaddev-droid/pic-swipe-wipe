@@ -10,7 +10,7 @@ import { ThemeProvider } from "@themes/ThemeContext";
  * Pour un rendu correct, utilisez Storybook sur un simulateur ou un appareil réel.
  */
 const meta: Meta<typeof VideoContainer> = {
-  title: "UI/Video/VideoContainer",
+  title: "UI/VideoPlayer",
   component: VideoContainer,
   decorators: [
     (Story) => (

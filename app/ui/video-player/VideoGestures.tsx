@@ -4,18 +4,18 @@
  */
 import React, { useRef } from "react";
 import { TouchableWithoutFeedback, View, Dimensions } from "react-native";
-import { makeVideoStyles } from "./videoPlayer.style";
-import { useTheme } from "@themes/ThemeContext";
+import { VideoPlayerShape } from "./videoPlayer.style";
+
 interface GestureProps {
   /** Alterne entre lecture et pause */
   onTogglePlay: () => void;
   /** Avance ou recule dans la vidéo (en secondes) */
   onSeek: (offsetSeconds: number) => void;
+
+  styles: VideoPlayerShape["gestures"];
 }
 
-export const VideoGestures = ({ onTogglePlay, onSeek }: GestureProps) => {
-  const { theme } = useTheme();
-  const styles = makeVideoStyles(theme);
+export const VideoGestures = ({ onTogglePlay, onSeek, styles }: GestureProps) => {
   const { width } = Dimensions.get("window");
 
   // 🎯 Correction du type : On utilise ReturnType pour s'adapter à l'environnement
@@ -52,7 +52,7 @@ export const VideoGestures = ({ onTogglePlay, onSeek }: GestureProps) => {
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
-      <View style={styles.gestureOverlay} testID="video-gestures" />
+      <View style={styles.container} testID="video-gestures" />
     </TouchableWithoutFeedback>
   );
 };

@@ -1,15 +1,33 @@
+import { StylesOverride, ThemeTokens } from "@themes/theme";
+import { StyleSheet, ViewStyle, TextStyle } from "react-native";
+import { IconStyles } from "@ui/icon/icon.style"; // ✅ Pour l'override profond
+
 /**
- * @file select.style.ts
- * @description Styles pour le Select avec positionnement dynamique.
+ * Shape structurelle du Select.
  */
-import { ThemeTokens } from "@themes/theme";
-import { StyleSheet } from "react-native";
+export type SelectShape = {
+  container: ViewStyle;
+  trigger: ViewStyle;
+  triggerActive: ViewStyle;
+  triggerLabel: TextStyle;
+  overlay: ViewStyle;
+  menu: ViewStyle;
+  optionItem: ViewStyle;
+  optionSelected: ViewStyle;
+  optionText: TextStyle;
+  optionTextSelected: TextStyle;
+  /** ✅ Imbrication pour les icônes du Select (trigger et options) */
+  icon: IconStyles;
+};
 
-export const makeSelectStyles = (theme: ThemeTokens) => {
-  const surface = theme.colors.surface ?? theme.colors.background ?? "white";
-  const onSurface = theme.colors.onSurface ?? theme.colors.text ?? "#000";
+/**
+ * Factory de styles pour le composant Select.
+ */
+export default function makeSelectStyles(theme: ThemeTokens): SelectShape {
+  const surface = theme.colors.surface ?? "white";
+  const onSurface = theme.colors.onSurface ?? "#000";
 
-  return StyleSheet.create({
+  const flats = StyleSheet.create({
     container: {
       width: "100%",
     },
@@ -35,16 +53,15 @@ export const makeSelectStyles = (theme: ThemeTokens) => {
     },
     overlay: {
       flex: 1,
-      // On garde un overlay transparent pour détecter le clic extérieur
     },
     menu: {
-      position: "absolute", // Indispensable pour l'alignement
+      position: "absolute",
       backgroundColor: surface,
       borderRadius: 8,
-      shadowColor: theme.colors.shadow || "rgba(0,0,0,0.1)",
+      shadowColor: "#000",
       shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.2,
-      shadowRadius: 8,
+      shadowOpacity: 0.15,
+      shadowRadius: 10,
       elevation: 5,
       overflow: "hidden",
     },
@@ -53,10 +70,9 @@ export const makeSelectStyles = (theme: ThemeTokens) => {
       alignItems: "center",
       paddingHorizontal: 16,
       paddingVertical: 12,
-      gap: 12,
     },
     optionSelected: {
-      backgroundColor: theme.colors.primary + "15",
+      backgroundColor: theme.colors.primary + "15", // 15% d'opacité
     },
     optionText: {
       fontSize: 16,
@@ -68,4 +84,15 @@ export const makeSelectStyles = (theme: ThemeTokens) => {
       fontWeight: "600",
     },
   });
-};
+
+  return {
+    ...flats,
+    icon: {
+      container: {
+        marginRight: 12, // Gap par défaut pour les options
+      },
+    },
+  };
+}
+
+export type SelectStyles = StylesOverride<SelectShape>;

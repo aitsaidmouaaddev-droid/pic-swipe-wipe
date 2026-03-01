@@ -1,23 +1,15 @@
-import { ThemeTokens } from "@themes/theme";
-import { StyleSheet } from "react-native";
+import { StylesOverride, ThemeTokens } from "@styles/themes/theme";
+import { StyleSheet, ViewStyle, ImageStyle } from "react-native";
 
 /**
- * Configuration for the Logo scale animation.
+ * Configuration de l'animation par défaut.
  */
 export interface LogoAnimationPreset {
-  /** Starting scale value. */
   scaleFrom: number;
-
-  /** Ending scale value. */
   scaleTo: number;
-
-  /** Duration in milliseconds for each phase. */
   duration: number;
 }
 
-/**
- * Default animation preset used by {@link Logo}.
- */
 export const defaultLogoAnimation: LogoAnimationPreset = {
   scaleFrom: 1,
   scaleTo: 1.05,
@@ -25,13 +17,28 @@ export const defaultLogoAnimation: LogoAnimationPreset = {
 };
 
 /**
- * Creates styles for {@link Logo} using theme tokens.
+ * Shape structurelle du Logo.
  */
-export default function makeLogoStyles(theme: ThemeTokens, size: number) {
+export type LogoShape = {
+  container: ViewStyle;
+  image: ImageStyle;
+};
+
+/**
+ * Création des styles pour le Logo.
+ * On retire "size" car il est injecté dynamiquement dans le composant.
+ */
+export default function makeLogoStyles(theme: ThemeTokens): LogoShape {
   return StyleSheet.create({
-    logo: {
-      width: size,
-      height: size,
+    container: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    image: {
+      // Styles thématiques (ex: une ombre ou un filtre)
+      opacity: 1,
     },
   });
 }
+
+export type LogoStyles = StylesOverride<LogoShape>;

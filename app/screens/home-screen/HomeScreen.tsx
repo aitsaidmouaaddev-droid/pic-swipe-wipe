@@ -1,107 +1,68 @@
 /**
  * @file HomeScreen.tsx
- * @description Écran principal connectant le deck de cartes à Redux et à la persistance SQLite.
- * Gère la navigation dans les médias et l'enregistrement des décisions de l'utilisateur.
+ * @description Écran principal utilisant le MediaScreenLayout pour trier les nouveaux médias.
  */
-import React, { useCallback, useEffect, useRef } from "react";
-import { View, Text, Image } from "react-native";
-import CardsDeck from "@ui/cards-deck/CardsDeck";
-import { useAppDispatch, useAppSelector } from "@store/hooks";
-import { AppMediaType, MediaItem, mediaScanActions } from "@store/mediaScanSlice";
-import { selectFrontItem, selectBackItem } from "@store/mediaSelectors";
+import React, { useMemo, useState } from "react";
+import { useAppSelector } from "@store/hooks";
+import { AppMediaType } from "@store/mediaScanSlice";
 import { useMedia } from "@hooks/useMedia.hook";
-import { VideoContainer } from "@ui/video-player/VideoContainer";
+import { SelectOption } from "@ui/select/Select";
+import { useTheme } from "@themes/ThemeContext";
+import makeHomeScreenStyles from "./homeScreen.style";
+import MediaScreenLayout from "@components/media-screen-layout/MediaScreenLayout";
 
 export default function HomeScreen() {
   const { items, cursor } = useAppSelector((state) => state.mediaScan);
-  const dispatch = useAppDispatch();
+  const { theme } = useTheme();
   const { handleSwipeCommit } = useMedia();
 
-  const frontItem = useAppSelector(selectFrontItem);
-  const backItem = useAppSelector(selectBackItem);
+  // On récupère l'objet global (UI + Actions)
+  const styles = useMemo(() => makeHomeScreenStyles(theme), [theme]);
 
-  const frontItemRef = useRef(frontItem);
-  useEffect(() => {
-    frontItemRef.current = frontItem;
-  }, [frontItem]);
+  const [activeFilter, setActiveFilter] = useState<string>("all");
 
-  const TAB_BAR_HEIGHT = 60;
-
-  const renderMedia = useCallback(
-    (item: MediaItem) => {
-      const isActive = items[cursor]?.id === item.id;
-
-      if (item.type === AppMediaType.PHOTO) {
-        return (
-          <Image key={item.id} source={{ uri: item.uri }} style={{ flex: 1 }} resizeMode="cover" />
-        );
-      }
-
-      if (item.type === AppMediaType.VIDEO) {
-        return (
-          <VideoContainer
-            key={item.id}
-            uri={item.uri}
-            isActive={isActive}
-            tabBarHeight={TAB_BAR_HEIGHT}
-          />
-        );
-      }
-
-      return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Text>Format non supporté</Text>
-          <Text>{item.name}</Text>
-        </View>
-      );
+  const filterOptions: SelectOption[] = [
+    { label: "All Media", value: "all", startIcon: { type: "vector", name: "layers-outline" } },
+    {
+      label: "Photos",
+      value: AppMediaType.PHOTO,
+      startIcon: { type: "vector", name: "image-outline" },
     },
-    [items, cursor],
-  );
-
-  // ✅ STABLE callback (doesn't change every render)
-  const onCommit = useCallback(
-    async (direction: "left" | "right") => {
-      const item = frontItemRef.current;
-      if (!item) return;
-
-      await handleSwipeCommit(item.id, direction);
-      dispatch(mediaScanActions.next());
+    {
+      label: "Videos",
+      value: AppMediaType.VIDEO,
+      startIcon: { type: "vector", name: "videocam-outline" },
     },
-    [handleSwipeCommit, dispatch],
-  );
+  ];
 
-  if (!frontItem) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>No items yet. Run scan.</Text>
-      </View>
-    );
-  }
+  // 2. Configuration des actions utilisant les styles du thème
+  const leftAction = {
+    color: styles.actions.left.color,
+    icon: { type: "vector", name: styles.actions.left.iconName } as const,
+    onAction: async (item: any) => {
+      await handleSwipeCommit(item.id, "left");
+    },
+  };
+
+  const rightAction = {
+    color: styles.actions.right.color,
+    icon: { type: "vector", name: styles.actions.right.iconName } as const,
+    onAction: async (item: any) => {
+      await handleSwipeCommit(item.id, "right");
+    },
+  };
 
   return (
-    <View style={{ flex: 1 }}>
-      <CardsDeck
-        // ✅ REMOVE THIS:
-        key={frontItem.id}
-        containerStyle={{ flex: 1 }}
-        cardStyle={{ borderRadius: 0 }}
-        frontItem={frontItem}
-        backItem={backItem}
-        overlayMaxOpacity={0.4}
-        renderFront={(item) => renderMedia(item)}
-        renderBack={(item) => renderMedia(item)}
-        leftAction={{
-          color: "#34c759",
-          icon: { type: "vector", name: "checkmark-circle" },
-          widthRatio: 0.3,
-        }}
-        rightAction={{
-          color: "#ff3b30",
-          icon: { type: "vector", name: "trash" },
-          widthRatio: 0.3,
-        }}
-        onSwipeCommit={onCommit}
-      />
-    </View>
+    <MediaScreenLayout
+      items={items}
+      cursor={cursor}
+      leftAction={leftAction}
+      rightAction={rightAction}
+      activeFilter={activeFilter}
+      onFilterChange={setActiveFilter}
+      filterOptions={filterOptions}
+      emptyTitle="Plus de médias à trier. Lancez un scan !"
+      tabBarHeight={60}
+    />
   );
 }
