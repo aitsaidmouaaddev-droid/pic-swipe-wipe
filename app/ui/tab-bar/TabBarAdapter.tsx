@@ -1,8 +1,9 @@
-import React from "react";
+import APP_CONFIG from "@config";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import type { TabConfigItem, TabName } from "./tabs.config";
-import TabBar, { TabBarProps } from "./TabBar";
 import { ThemeTokens } from "@themes/theme";
+import React from "react";
+import TabBar, { TabBarProps } from "./TabBar";
+import type { TabConfigItem } from "./tabs.config";
 
 /**
  * Props for {@link TabBarAdapter}.
@@ -30,7 +31,7 @@ export default function TabBarAdapter({
   gap,
   iconSize,
 }: TabBarAdapterProps) {
-  const activeTab = state.routes[state.index].name as TabName;
+  const activeTab = state.routes[state.index].name;
 
   return (
     <TabBar
@@ -42,6 +43,18 @@ export default function TabBarAdapter({
       iconPosition={iconPosition}
       gap={gap}
       iconSize={iconSize}
+      stylesOverride={{
+        container: {
+          bottom: APP_CONFIG.tabs.bottom || 24,
+          height: APP_CONFIG.tabs.height || 65,
+        },
+        label: {
+          color: APP_CONFIG.tabs.inactiveTintColor,
+        },
+        labelActive: {
+          color: APP_CONFIG.tabs.activeTintColor,
+        },
+      }}
     />
   );
 }

@@ -3,20 +3,20 @@
  * @description Dropdown Select MUI-style.
  * Features mandatory chevron in trigger, plus start/end icons for items.
  */
-import React, { useState, useMemo, useRef } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  Modal,
-  FlatList,
-  TouchableWithoutFeedback,
-  ViewStyle,
-} from "react-native";
+import useResultedStyle from "@hooks/useResultedStyle.hook";
 import { useTheme } from "@themes/ThemeContext";
 import Icon, { IconProps } from "@ui/icon/Icon";
+import React, { useMemo, useRef, useState } from "react";
+import {
+  FlatList,
+  Modal,
+  Pressable,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from "react-native";
 import makeSelectStyles, { SelectStyles } from "./select.style";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
 
 export interface SelectOption {
   label: string;
@@ -39,6 +39,7 @@ export interface SelectProps {
   triggerIcon?: IconProps;
   testID?: string;
   stylesOverride?: Partial<SelectStyles>;
+  iconsOnly?: boolean;
 }
 
 export default function Select({
@@ -52,6 +53,7 @@ export default function Select({
   triggerIcon = { type: "vector", name: "chevron-down" },
   testID,
   stylesOverride,
+  iconsOnly = false,
 }: SelectProps) {
   const { theme } = useTheme();
   // ✅ On mémoïse les styles avec le thème en dépendance
@@ -135,12 +137,14 @@ export default function Select({
                           color={isSelected ? theme.colors.primary : baseColor}
                         />
                       )}
-                      <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
-                        {item.label}
-                      </Text>
 
+                      {!iconsOnly && (
+                        <Text style={[styles.optionText, isSelected && styles.optionTextSelected]}>
+                          {item.label}
+                        </Text>
+                      )}
                       {/* END ICON (Default to checkmark if selected) */}
-                      {item.endIcon && (
+                      {!iconsOnly && item.endIcon && (
                         <Icon
                           {...item.endIcon}
                           size={16}

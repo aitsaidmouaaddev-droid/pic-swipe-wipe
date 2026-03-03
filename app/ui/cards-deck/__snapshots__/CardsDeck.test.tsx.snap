@@ -44,7 +44,7 @@ exports[`CardsDeck Component renders action overlays when config is provided 1`]
         style={
           [
             {
-              "backgroundColor": "#FFFFFF",
+              "backgroundColor": "#111827",
               "borderRadius": 16,
               "elevation": 3,
               "flex": 1,
@@ -75,134 +75,6 @@ exports[`CardsDeck Component renders action overlays when config is provided 1`]
             }
           }
         />
-        <View
-          style={
-            {
-              "alignItems": "center",
-              "borderRadius": 16,
-              "bottom": 0,
-              "justifyContent": "center",
-              "left": 0,
-              "pointerEvents": "none",
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
-          }
-        >
-          <View
-            collapsable={false}
-            style={
-              {
-                "alignItems": "center",
-                "borderBottomLeftRadius": 999,
-                "borderTopLeftRadius": 999,
-                "bottom": 0,
-                "justifyContent": "center",
-                "left": 0,
-                "opacity": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "top": 0,
-                "width": 0.3,
-              }
-            }
-          >
-            <View
-              collapsable={false}
-              style={
-                {
-                  "backgroundColor": "green",
-                  "bottom": 0,
-                  "left": 0,
-                  "position": "absolute",
-                  "top": 0,
-                  "transform": [
-                    {
-                      "translateX": -0.3,
-                    },
-                  ],
-                  "width": 0.3,
-                }
-              }
-            />
-            <View
-              accessibilityLabel="{"type":"vector","name":"checkmark","size":26,"color":"#F4F6F8"}"
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "justifyContent": "center",
-                  },
-                  undefined,
-                ]
-              }
-              testID="icon-checkmark"
-            >
-              <View
-                color="#F4F6F8"
-                name="checkmark"
-                size={26}
-              />
-            </View>
-          </View>
-          <View
-            collapsable={false}
-            style={
-              {
-                "alignItems": "center",
-                "borderBottomRightRadius": 999,
-                "borderTopRightRadius": 999,
-                "bottom": 0,
-                "justifyContent": "center",
-                "opacity": 0,
-                "overflow": "hidden",
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-                "width": 0.3,
-              }
-            }
-          >
-            <View
-              collapsable={false}
-              style={
-                {
-                  "backgroundColor": "red",
-                  "bottom": 0,
-                  "position": "absolute",
-                  "right": 0,
-                  "top": 0,
-                  "transform": [
-                    {
-                      "translateX": 0.3,
-                    },
-                  ],
-                  "width": 0.3,
-                }
-              }
-            />
-            <View
-              accessibilityLabel="{"type":"vector","name":"trash","size":26,"color":"#F4F6F8"}"
-              style={
-                [
-                  {
-                    "alignItems": "center",
-                    "justifyContent": "center",
-                  },
-                  undefined,
-                ]
-              }
-              testID="icon-trash"
-            >
-              <View
-                color="#F4F6F8"
-                name="trash"
-                size={26}
-              />
-            </View>
-          </View>
-        </View>
       </View>
     </View>
     <View
@@ -242,7 +114,7 @@ exports[`CardsDeck Component renders action overlays when config is provided 1`]
         style={
           [
             {
-              "backgroundColor": "#FFFFFF",
+              "backgroundColor": "#111827",
               "borderRadius": 16,
               "elevation": 3,
               "flex": 1,
@@ -274,6 +146,134 @@ exports[`CardsDeck Component renders action overlays when config is provided 1`]
           }
         >
           <View />
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderRadius": 16,
+              "bottom": 0,
+              "justifyContent": "center",
+              "left": 0,
+              "pointerEvents": "none",
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "borderBottomLeftRadius": 0,
+                "borderTopLeftRadius": 0,
+                "bottom": 0,
+                "justifyContent": "center",
+                "opacity": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+                "width": 0.3,
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                {
+                  "backgroundColor": "green",
+                  "bottom": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "transform": [
+                    {
+                      "translateX": 0.3,
+                    },
+                  ],
+                  "width": 0.3,
+                }
+              }
+            />
+            <View
+              accessibilityLabel="{"type":"vector","name":"checkmark","size":32,"color":"#FFF"}"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  },
+                  undefined,
+                ]
+              }
+              testID="icon-checkmark"
+            >
+              <View
+                color="#FFF"
+                name="checkmark"
+                size={32}
+              />
+            </View>
+          </View>
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "borderBottomRightRadius": 0,
+                "borderTopRightRadius": 0,
+                "bottom": 0,
+                "justifyContent": "center",
+                "left": 0,
+                "opacity": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "top": 0,
+                "width": 0.3,
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                {
+                  "backgroundColor": "red",
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "top": 0,
+                  "transform": [
+                    {
+                      "translateX": -0.3,
+                    },
+                  ],
+                  "width": 0.3,
+                }
+              }
+            />
+            <View
+              accessibilityLabel="{"type":"vector","name":"trash","size":32,"color":"#FFF"}"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  },
+                  undefined,
+                ]
+              }
+              testID="icon-trash"
+            >
+              <View
+                color="#FFF"
+                name="trash"
+                size={32}
+              />
+            </View>
+          </View>
         </View>
       </View>
     </View>

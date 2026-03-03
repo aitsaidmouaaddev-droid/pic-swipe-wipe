@@ -1,8 +1,8 @@
+import useResultedStyle from "@hooks/useResultedStyle.hook";
+import { useTheme } from "@themes/ThemeContext";
 import React from "react";
 import { View } from "react-native";
-import { useTheme } from "@themes/ThemeContext";
 import makeCardStyles, { CardStyles } from "./card.style";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
 
 /**
  * Props for {@link Card}.

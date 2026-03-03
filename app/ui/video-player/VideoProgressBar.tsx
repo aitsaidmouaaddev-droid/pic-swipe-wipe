@@ -17,7 +17,7 @@ export interface ProgressBarProps {
   onScrubEnd: (ratio: number) => void; // Quand on lâche
 }
 
-export const VideoProgressBar = ({
+const VideoProgressBar = ({
   progress,
   bottomOffset,
   onScrubStart,
@@ -65,3 +65,5 @@ export const VideoProgressBar = ({
     </View>
   );
 };
+
+export default VideoProgressBar;

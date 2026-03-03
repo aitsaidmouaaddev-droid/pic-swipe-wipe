@@ -1,16 +1,16 @@
-import React from "react";
-import { Pressable, Text, View } from "react-native";
+import useResultedStyle from "@hooks/useResultedStyle.hook";
 import { useTheme } from "@themes/ThemeContext";
 import Icon from "@ui/icon/Icon";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
 import makeButtonStyles, {
-  ButtonSize,
-  ButtonVariant,
   ButtonIconPosition,
-  getButtonTextStyleKey,
-  getButtonIconColor,
+  ButtonSize,
   ButtonStyles,
+  ButtonVariant,
+  getButtonIconColor,
   getButtonIconSize,
+  getButtonTextStyleKey,
   getFlexDirection,
 } from "./button.style";
 

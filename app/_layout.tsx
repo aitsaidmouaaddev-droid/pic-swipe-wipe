@@ -37,7 +37,7 @@ export default function Layout() {
 
     // 📱 Hide Android bottom navigation bar
     NavigationBar.setVisibilityAsync("hidden");
-    NavigationBar.setBehaviorAsync("overlay-swipe");
+    //NavigationBar.setBehaviorAsync("overlay-swipe");
   }, []);
 
   return (

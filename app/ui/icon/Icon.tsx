@@ -1,9 +1,9 @@
-import React from "react";
-import { View, StyleProp, ViewStyle } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import makeIconStyles, { IconStyles } from "./icon.style";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
+import useResultedStyle from "@hooks/useResultedStyle.hook";
 import { useTheme } from "@themes/ThemeContext";
+import React from "react";
+import { StyleProp, View, ViewStyle } from "react-native";
+import makeIconStyles, { IconStyles } from "./icon.style";
 
 export type IconRenderer = React.ComponentType<{
   name: any; // Utilisation de any pour accepter différents jeux d'icônes

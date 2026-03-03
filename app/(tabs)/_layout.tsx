@@ -1,7 +1,8 @@
-import { Tabs } from "expo-router";
+import APP_CONFIG from "@config";
 import { useTheme } from "@themes/ThemeContext";
-import TABS from "@ui/tab-bar/tabs.config";
 import TabBarAdapter from "@ui/tab-bar/TabBarAdapter";
+import { routesToTabs } from "@ui/tab-bar/tabs.config";
+import { Tabs } from "expo-router";
 
 /**
  * Root layout component for tab-based navigation.
@@ -17,6 +18,10 @@ import TabBarAdapter from "@ui/tab-bar/TabBarAdapter";
 export default function TabLayout() {
   const { theme } = useTheme();
 
+  const tabs = routesToTabs(Object.values(APP_CONFIG?.tabs?.routes));
+
+  console.log(tabs.map((r) => r.name));
+
   return (
     <Tabs
       screenOptions={{ headerShown: false }}
@@ -24,14 +29,14 @@ export default function TabLayout() {
         <TabBarAdapter
           {...props}
           theme={theme}
-          tabs={TABS}
+          tabs={tabs}
           showIcons
           showLabels={false} // Tinder-like: icons only (change if you want)
           iconPosition="top"
         />
       )}
     >
-      {TABS.map((t) => (
+      {tabs.map((t) => (
         <Tabs.Screen key={t.name} name={t.name} options={{ title: t.title }} />
       ))}
     </Tabs>

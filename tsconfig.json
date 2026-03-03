@@ -3,6 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "@services/*": ["./app/services/*"],
+      "@config": ["./app/config.ts"],
       "@hooks/*": ["./app/hooks/*"],
       "@mocks/*": ["./mocks/*"],
       "@themes/*": ["./styles/themes/*"],

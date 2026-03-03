@@ -1,11 +1,11 @@
-import React from "react";
-import { View, Pressable, Text } from "react-native";
-import type { TabConfigItem, TabName } from "./tabs.config";
-import Icon from "@ui/icon/Icon";
-import { ThemeTokens } from "@themes/theme";
-import makeTabBarStyles, { TabBarStyles } from "./tabBar.style";
+import useResultedStyle from "@hooks/useResultedStyle.hook";
 import { useTheme } from "@themes/ThemeContext";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
+import Icon from "@ui/icon/Icon";
+import React from "react";
+import { Pressable, Text, View } from "react-native";
+import makeTabBarStyles, { TabBarStyles } from "./tabBar.style";
+import type { TabConfigItem } from "./tabs.config";
+import TABS_DEFAULT from "./tabs.config";
 
 /**
  * Icon position relative to label.
@@ -21,13 +21,13 @@ export type TabIconPosition = "top" | "bottom" | "left" | "right";
  */
 export interface TabBarProps {
   /** Tabs displayed in the bar (single source of truth). */
-  tabs: TabConfigItem[];
+  tabs?: TabConfigItem[];
 
   /** Currently active tab route name. */
-  activeTab: TabName;
+  activeTab: string;
 
   /** Called when user taps a tab. */
-  onTabPress: (tab: TabName) => void;
+  onTabPress: (tab: string) => void;
 
   /**
    * Controls whether labels are shown.
@@ -67,7 +67,7 @@ export interface TabBarProps {
  * Can be used in Expo Router, React Navigation, and Storybook.
  */
 export default function TabBar({
-  tabs,
+  tabs = TABS_DEFAULT,
   activeTab,
   onTabPress,
   showLabels = true,

@@ -2,9 +2,9 @@ import React from "react";
 import { View, Text } from "react-native";
 import type { Meta, StoryObj } from "@storybook/react";
 import MediaScreenLayout from "./MediaScreenLayout";
-import { AppMediaType } from "@store/mediaScanSlice";
 import { Provider } from "react-redux";
 import { configureStore, createSlice } from "@reduxjs/toolkit";
+import { AppMediaType } from "@services/mediaService";
 
 // --- MOCK REDUX STORE ---
 // On crée un store minimal pour éviter que useAppDispatch ne plante dans Storybook
@@ -47,22 +47,10 @@ const meta: Meta<typeof MediaScreenLayout> = {
       control: { type: "number", min: 0, max: MOCK_ITEMS.length - 1 },
       description: "Index de l'élément affiché au premier plan",
     },
-    activeFilter: {
-      control: "select",
-      options: ["all", "photo", "video"],
-      description: "Filtre sélectionné dans le Select",
-    },
-    tabBarHeight: {
-      control: { type: "range", min: 0, max: 150 },
-      description: "Hauteur de la TabBar pour décaler la barre de progression vidéo",
-    },
     emptyTitle: {
       control: "text",
       description: "Message affiché quand items est vide ou le curseur hors limite",
     },
-    // Contrôles pour les couleurs des actions de swipe
-    "leftAction.color": { control: "color" },
-    "rightAction.color": { control: "color" },
   },
   args: {
     items: MOCK_ITEMS,

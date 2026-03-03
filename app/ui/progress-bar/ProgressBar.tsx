@@ -1,9 +1,8 @@
+import useResultedStyle from "@hooks/useResultedStyle.hook";
+import { useTheme } from "@themes/ThemeContext";
 import React from "react";
 import { View } from "react-native";
-import { useTheme } from "@themes/ThemeContext";
-import makeStyles, { ProgressBarStyles } from "./progressBar.style";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
-import makeProgressBarStyles from "./progressBar.style";
+import makeProgressBarStyles, { ProgressBarStyles } from "./progressBar.style";
 
 /**
  * Props for ProgressBar.

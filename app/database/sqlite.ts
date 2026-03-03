@@ -1,31 +1,35 @@
 /**
  * @file sqlite.ts
- * @description Gestionnaire de base de données SQLite.
- * Gère l'initialisation unique et la création du schéma pour le ledger des médias.
+ * @description SQLite database manager with centralized table names.
  */
 import * as SQLite from "expo-sqlite";
 
-/** * Verdicts possibles pour un média après un swipe.
+/** * Table Names Constants
+ * Centralized here to avoid "no such table" errors in services.
  */
-export type MediaVerdict = "trash" | "keep";
+export const MEDIA_LEDGER_TABLE = "media_ledger";
 
-/** Instance unique de la base de données pour éviter les fuites de mémoire. */
+/** * Possible verdicts for a media after a swipe. */
+export enum MediaVerdict {
+  UNKNOWN = "unknown",
+  KEEP = "keep",
+  TRASH = "trash",
+}
+
 let dbInstance: SQLite.SQLiteDatabase | null = null;
-/** Promesse d'initialisation pour gérer la concurrence au démarrage. */
 let initPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
 /**
- * Initialise la connexion et crée les tables nécessaires.
+ * Initializes the connection and creates the necessary tables.
  * @internal
- * @returns {Promise<SQLite.SQLiteDatabase>} L'instance de la base de données configurée.
  */
 async function internalInit(): Promise<SQLite.SQLiteDatabase> {
   const db = await SQLite.openDatabaseAsync("picSwipeWipe.db");
 
-  // Configuration du mode WAL pour la performance et création de la table
+  // Configuration using the exported constant
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
-    CREATE TABLE IF NOT EXISTS media_ledger (
+    CREATE TABLE IF NOT EXISTS ${MEDIA_LEDGER_TABLE} (
       id TEXT PRIMARY KEY NOT NULL,
       verdict TEXT NOT NULL,
       scannedAt INTEGER NOT NULL
@@ -37,8 +41,7 @@ async function internalInit(): Promise<SQLite.SQLiteDatabase> {
 }
 
 /**
- * Récupère l'instance sécurisée de la base de données.
- * @returns {Promise<SQLite.SQLiteDatabase>}
+ * Retrieves the secured database instance.
  */
 export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
   if (dbInstance) return dbInstance;
@@ -47,10 +50,17 @@ export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
 }
 
 /**
- * Réinitialise complètement le ledger (Utile pour le développement).
- * @returns {Promise<void>}
+ * Fully resets the ledger.
  */
 export async function resetDatabase(): Promise<void> {
   const db = await getDatabase();
-  await db.runAsync("DELETE FROM media_ledger;");
+  await db.runAsync(`DELETE FROM ${MEDIA_LEDGER_TABLE};`);
 }
+
+// Default export containing all members
+export default {
+  resetDatabase,
+  getDatabase,
+  MediaVerdict,
+  MEDIA_LEDGER_TABLE,
+};

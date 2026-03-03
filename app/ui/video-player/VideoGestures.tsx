@@ -15,7 +15,7 @@ interface GestureProps {
   styles: VideoPlayerShape["gestures"];
 }
 
-export const VideoGestures = ({ onTogglePlay, onSeek, styles }: GestureProps) => {
+const VideoGestures = ({ onTogglePlay, onSeek, styles }: GestureProps) => {
   const { width } = Dimensions.get("window");
 
   // 🎯 Correction du type : On utilise ReturnType pour s'adapter à l'environnement
@@ -56,3 +56,5 @@ export const VideoGestures = ({ onTogglePlay, onSeek, styles }: GestureProps) =>
     </TouchableWithoutFeedback>
   );
 };
+
+export default VideoGestures;

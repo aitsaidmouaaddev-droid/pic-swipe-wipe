@@ -1,5 +1,5 @@
 import HomeScreen from "../screens/home-screen/HomeScreen";
-import { FocusUnmount } from "./FocusUnmount.wrapper";
+import FocusUnmount from "./FocusUnmount.wrapper";
 
 /**
  * Route wrapper for the "Home" tab.

@@ -28,13 +28,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
  * @returns A Context Provider wrapping the provided children.
  */
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [mode, setMode] = useState<"light" | "dark">("light");
+  const [mode, setMode] = useState<"light" | "dark">("dark");
 
   /**
    * Toggles the theme mode between 'light' and 'dark'.
    */
   const toggleTheme = () => {
-    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+    setMode((prevMode) => (prevMode === "light" ? "dark" : "dark"));
   };
 
   /**

@@ -7,6 +7,8 @@ node_modules/
 
 mocks
 
+.env
+
 # Expo
 .expo/
 dist/

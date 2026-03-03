@@ -1,8 +1,8 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
 import type { Meta, StoryObj } from "@storybook/react";
-import { VideoContainer } from "./VideoContainer";
 import { ThemeProvider } from "@themes/ThemeContext";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import VideoContainer from "./VideoContainer";
 
 /**
  * Storybook pour le VideoContainer.

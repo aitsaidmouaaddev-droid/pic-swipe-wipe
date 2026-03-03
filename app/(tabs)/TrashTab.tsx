@@ -1,6 +1,6 @@
 import React from "react";
 import TrashScreen from "../screens/trash-screen/TrashScreen";
-import { FocusUnmount } from "./FocusUnmount.wrapper";
+import FocusUnmount from "./FocusUnmount.wrapper";
 
 /**
  * Route wrapper for the "Trash" tab.

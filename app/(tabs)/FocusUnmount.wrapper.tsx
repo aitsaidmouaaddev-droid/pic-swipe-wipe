@@ -12,10 +12,12 @@ interface FocusUnmountProps {
   fallback?: React.ReactNode;
 }
 
-export const FocusUnmount = ({ children, fallback = null }: FocusUnmountProps) => {
+const FocusUnmount = ({ children, fallback = null }: FocusUnmountProps) => {
   const isFocused = useIsFocused();
 
   // Si l'écran est focus, on rend les enfants.
   // Sinon, on démonte tout (ce qui coupe les players vidéos proprement).
   return <>{isFocused ? children : fallback}</>;
 };
+
+export default FocusUnmount;

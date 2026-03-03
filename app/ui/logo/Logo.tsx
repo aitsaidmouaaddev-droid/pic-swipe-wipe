@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useMemo } from "react";
+import useResultedStyle from "@hooks/useResultedStyle.hook";
+import { useTheme } from "@themes/ThemeContext";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Animated, ImageSourcePropType } from "react-native";
 import makeLogoStyles, { LogoStyles } from "./logo.style";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
-import { useTheme } from "@themes/ThemeContext";
 
 type LogoAnimation = {
   scaleFrom?: number;

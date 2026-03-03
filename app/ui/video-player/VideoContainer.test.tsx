@@ -1,21 +1,22 @@
-import React from "react";
-import { render, fireEvent, act, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
 import { ThemeProvider } from "@themes/ThemeContext";
-import { VideoContainer } from "./VideoContainer";
-import { createVideoPlayer } from "expo-video";
 import { useEventListener } from "expo";
+import { createVideoPlayer } from "expo-video";
+import React from "react";
+import VideoContainer from "./VideoContainer";
 
-// Mock children so we can call props easily
+// 1. Correction des Mocks pour retourner un "Default Export"
 jest.mock("./VideoGestures", () => {
   const React = require("react");
   const { View } = require("react-native");
-  return { VideoGestures: (props: any) => <View testID="video-gestures" {...props} /> };
+  // Retourne directement la fonction ou un objet avec la clé 'default'
+  return (props: any) => <View testID="video-gestures" {...props} />;
 });
 
 jest.mock("./VideoProgressBar", () => {
   const React = require("react");
   const { View } = require("react-native");
-  return { VideoProgressBar: (props: any) => <View testID="video-progress-bar" {...props} /> };
+  return (props: any) => <View testID="video-progress-bar" {...props} />;
 });
 
 // Mock Button

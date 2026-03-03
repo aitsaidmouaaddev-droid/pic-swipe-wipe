@@ -67,7 +67,7 @@ type MakeStylesFn<S> = (theme: ThemeTokens) => S;
  *   `style={[styles.menu, dynamicMenuStyle]}`
  *   => ça évite de casser des tests ou la logique de layout.
  */
-export function useResultedStyle<S extends Record<string, any>>(
+function useResultedStyle<S extends Record<string, any>>(
   theme: ThemeTokens,
   makeStyles: MakeStylesFn<S>,
   override?: StylesOverride<S>,
@@ -93,3 +93,5 @@ export function useResultedStyle<S extends Record<string, any>>(
     return composed;
   }, [theme, makeStyles, override]);
 }
+
+export default useResultedStyle;

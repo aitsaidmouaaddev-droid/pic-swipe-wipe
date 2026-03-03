@@ -4,39 +4,41 @@
  * Gère le cycle de vie du player natif, les feedbacks visuels animés,
  * et le scrubbing interactif.
  */
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { View } from "react-native";
 import { useEventListener } from "expo";
 import { createVideoPlayer, VideoView } from "expo-video";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
-  withSequence,
   withDelay,
+  withSequence,
+  withTiming,
 } from "react-native-reanimated";
 
+import useResultedStyle from "@hooks/useResultedStyle.hook";
 import { useTheme } from "@themes/ThemeContext";
-import Icon from "@ui/icon/Icon";
-import { VideoProgressBar } from "./VideoProgressBar";
-import { VideoGestures } from "./VideoGestures";
 import Button from "@ui/button/Button";
+import Icon from "@ui/icon/Icon";
+import VideoGestures from "./VideoGestures";
 import makeVideoStyles, { VideoPlayerStyles } from "./videoPlayer.style";
-import { useResultedStyle } from "@hooks/useResultedStyle.hook";
+import VideoProgressBar from "./VideoProgressBar";
 
 /**
  * Offsets de positionnement pour les contrôles par rapport à la TabBar.
  */
-const PROGRESS_BAR_OFFSET = 15;
-const MUTE_BUTTON_OFFSET = 65;
+const PROGRESS_BAR_OFFSET = 90;
+const MUTE_BUTTON_OFFSET = 130;
 
 export interface VideoContainerProps {
   /** URI de la source vidéo (locale ou distante) */
   uri: string;
   /** Définit si la vidéo doit être en lecture active */
   isActive: boolean;
-  /** Hauteur de la TabBar pour décaler les contrôles du bas */
-  tabBarHeight: number;
+
+  loop?: boolean;
+
+  contentFit?: string;
 
   stylesOverride?: Partial<VideoPlayerStyles>;
 }
@@ -46,11 +48,12 @@ export interface VideoContainerProps {
  * Utilise un `playerRef` manuel pour éviter les fuites de mémoire (Shared Object Released)
  * lors des cycles de réutilisation des composants dans une liste.
  */
-export const VideoContainer = ({
+const VideoContainer = ({
   uri,
   isActive,
-  tabBarHeight,
   stylesOverride,
+  loop = true,
+  contentFit = "cover",
 }: VideoContainerProps) => {
   const { theme } = useTheme();
   const styles = useResultedStyle<VideoPlayerStyles>(theme, makeVideoStyles, stylesOverride);
@@ -91,7 +94,7 @@ export const VideoContainer = ({
   const playerRef = useRef<any>(null);
   if (!playerRef.current) {
     const p = createVideoPlayer(uri);
-    p.loop = true;
+    p.loop = loop;
     p.timeUpdateEventInterval = 0.2;
     playerRef.current = p;
   }
@@ -215,9 +218,10 @@ export const VideoContainer = ({
   return (
     <View style={styles.container} testID="video-container">
       <VideoView
+        key={uri}
         player={player}
         style={styles.videoView}
-        contentFit="cover"
+        contentFit={contentFit as any}
         nativeControls={false}
         surfaceType="textureView"
       />
@@ -245,14 +249,14 @@ export const VideoContainer = ({
       <VideoProgressBar
         styles={styles.progressBar}
         progress={Math.min(1, Math.max(0, currentTime / (duration || 1)))}
-        bottomOffset={tabBarHeight + PROGRESS_BAR_OFFSET}
+        bottomOffset={PROGRESS_BAR_OFFSET}
         onScrubStart={onScrubStart}
         onScrub={onScrub}
         onScrubEnd={onScrubEnd}
       />
 
       {/* Bouton de contrôle du volume */}
-      <View style={[styles.muteButtonContainer, { bottom: tabBarHeight + MUTE_BUTTON_OFFSET }]}>
+      <View style={[styles.muteButtonContainer, { bottom: MUTE_BUTTON_OFFSET }]}>
         <Button
           testID="mute-button"
           variant="primary"
@@ -261,7 +265,7 @@ export const VideoContainer = ({
           icon={{
             type: "vector",
             name: isMuted ? "volume-mute" : "volume-high",
-            color: theme.colors.primary,
+            color: theme.colors.onSurface,
           }}
           stylesOverride={styles.muteButton}
         />
@@ -269,3 +273,5 @@ export const VideoContainer = ({
     </View>
   );
 };
+
+export default VideoContainer;

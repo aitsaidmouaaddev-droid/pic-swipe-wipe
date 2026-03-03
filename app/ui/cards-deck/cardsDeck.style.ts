@@ -43,13 +43,13 @@ export default function makeCardsDeckStyles(theme: ThemeTokens): CardsDeckShape 
     },
     overlayLeft: {
       left: 0,
-      borderTopLeftRadius: 999,
-      borderBottomLeftRadius: 999,
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
     },
     overlayRight: {
       right: 0,
-      borderTopRightRadius: 999,
-      borderBottomRightRadius: 999,
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
     },
     fillLeft: {
       position: "absolute",

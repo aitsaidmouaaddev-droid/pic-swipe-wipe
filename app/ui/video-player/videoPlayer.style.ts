@@ -114,8 +114,8 @@ export default function makeVideoStyles(theme: ThemeTokens): VideoPlayerShape {
     muteButton: {
       base: {
         borderRadius: 50,
-        width: 44,
-        height: 44,
+        width: 54, // Un peu plus grand pour le confort
+        height: 54,
         backgroundColor: theme.colors.background,
         borderWidth: 0,
       },

@@ -30,6 +30,7 @@ export default function makeTabBarStyles(theme: ThemeTokens): TabBarShape {
       left: 16,
       right: 16,
       bottom: 24, // Un peu plus d'espace pour le look "floating"
+      height: 40, // Hauteur standard pour les tab bars flottantes
 
       backgroundColor: theme.colors.background,
       borderColor: theme.colors.track,

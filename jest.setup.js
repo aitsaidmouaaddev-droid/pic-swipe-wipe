@@ -58,4 +58,20 @@ jest.mock("react-native-reanimated", () => require("react-native-reanimated/mock
 
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper", () => ({}), { virtual: true });
 
+jest.mock("expo-sqlite", () => ({
+  openDatabaseAsync: jest.fn().mockResolvedValue({
+    execAsync: jest.fn(),
+    runAsync: jest.fn(),
+    prepareAsync: jest.fn(),
+  }),
+}));
+
+jest.mock("expo-media-library", () => ({
+  deleteAssetsAsync: jest.fn(),
+  requestPermissionsAsync: jest.fn(),
+  getAssetsAsync: jest.fn(),
+  MediaType: { photo: "photo", video: "video" },
+  SortBy: { creationTime: "creationTime" },
+}));
+
 global.process.env.EXPO_OS = "ios";

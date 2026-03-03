@@ -1,6 +1,6 @@
 import React from "react";
 import ApprovedScreen from "../screens/approved-screen/ApprovedScreen";
-import { FocusUnmount } from "./FocusUnmount.wrapper";
+import FocusUnmount from "./FocusUnmount.wrapper";
 
 /**
  * Route wrapper for the "Approved" tab.
