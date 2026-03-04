@@ -1,1 +1,7 @@
+# .husky/pre-commit
+
+# 1. On vérifie les types sur tout le projet (Rapide grâce au cache)
+npm run typecheck
+
+# 2. On lance lint-staged pour fix et formater uniquement les fichiers modifiés
 npx lint-staged

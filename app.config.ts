@@ -23,6 +23,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ],
     "expo-sqlite",
     "@react-native-community/datetimepicker",
+    "expo-video"
   ],
   experiments: {
     typedRoutes: true,
