@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "exclude": [
+    "**/*.test.*",
+    "**/*.stories.*",
+    "**/__tests__/**",
+    ".rnstorybook/**",
+    "rnstorybook/**"
+  ]
+}

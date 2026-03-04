@@ -1,0 +1,282 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardsDeck Component renders action overlays when config is provided 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    {
+      "backgroundColor": "transparent",
+      "flex": 1,
+      "height": "100%",
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "flex": 1,
+        "position": "relative",
+      }
+    }
+  >
+    <View
+      collapsable={false}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "bottom": 0,
+          "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transform": [
+            {
+              "scale": 0.985,
+            },
+          ],
+        }
+      }
+    >
+      <View
+        style={
+          [
+            {
+              "backgroundColor": "#111827",
+              "borderRadius": 16,
+              "elevation": 3,
+              "flex": 1,
+              "height": "100%",
+              "shadowColor": "#000",
+              "shadowOffset": {
+                "height": 2,
+                "width": 0,
+              },
+              "shadowOpacity": 0.1,
+              "shadowRadius": 8,
+              "width": "100%",
+            },
+            {
+              "backgroundColor": "transparent",
+              "height": "100%",
+              "width": "100%",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "borderRadius": 16,
+              "flex": 1,
+              "overflow": "hidden",
+            }
+          }
+        />
+      </View>
+    </View>
+    <View
+      collapsable={false}
+      onMoveShouldSetResponder={[Function]}
+      onMoveShouldSetResponderCapture={[Function]}
+      onResponderEnd={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderReject={[Function]}
+      onResponderRelease={[Function]}
+      onResponderStart={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onStartShouldSetResponderCapture={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "bottom": 0,
+          "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transform": [
+            {
+              "translateX": 0,
+            },
+          ],
+        }
+      }
+      testID="deck-front-card"
+    >
+      <View
+        style={
+          [
+            {
+              "backgroundColor": "#111827",
+              "borderRadius": 16,
+              "elevation": 3,
+              "flex": 1,
+              "height": "100%",
+              "shadowColor": "#000",
+              "shadowOffset": {
+                "height": 2,
+                "width": 0,
+              },
+              "shadowOpacity": 0.1,
+              "shadowRadius": 8,
+              "width": "100%",
+            },
+            {
+              "backgroundColor": "transparent",
+              "height": "100%",
+              "width": "100%",
+            },
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "borderRadius": 16,
+              "flex": 1,
+              "overflow": "hidden",
+            }
+          }
+        >
+          <View />
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderRadius": 16,
+              "bottom": 0,
+              "justifyContent": "center",
+              "left": 0,
+              "pointerEvents": "none",
+              "position": "absolute",
+              "right": 0,
+              "top": 0,
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "borderBottomLeftRadius": 0,
+                "borderTopLeftRadius": 0,
+                "bottom": 0,
+                "justifyContent": "center",
+                "opacity": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+                "width": 0.3,
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                {
+                  "backgroundColor": "green",
+                  "bottom": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                  "transform": [
+                    {
+                      "translateX": 0.3,
+                    },
+                  ],
+                  "width": 0.3,
+                }
+              }
+            />
+            <View
+              accessibilityLabel="{"type":"vector","name":"checkmark","size":32,"color":"#FFF"}"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  },
+                  undefined,
+                ]
+              }
+              testID="icon-checkmark"
+            >
+              <View
+                color="#FFF"
+                name="checkmark"
+                size={32}
+              />
+            </View>
+          </View>
+          <View
+            collapsable={false}
+            style={
+              {
+                "alignItems": "center",
+                "borderBottomRightRadius": 0,
+                "borderTopRightRadius": 0,
+                "bottom": 0,
+                "justifyContent": "center",
+                "left": 0,
+                "opacity": 0,
+                "overflow": "hidden",
+                "position": "absolute",
+                "top": 0,
+                "width": 0.3,
+              }
+            }
+          >
+            <View
+              collapsable={false}
+              style={
+                {
+                  "backgroundColor": "red",
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "top": 0,
+                  "transform": [
+                    {
+                      "translateX": -0.3,
+                    },
+                  ],
+                  "width": 0.3,
+                }
+              }
+            />
+            <View
+              accessibilityLabel="{"type":"vector","name":"trash","size":32,"color":"#FFF"}"
+              style={
+                [
+                  {
+                    "alignItems": "center",
+                    "justifyContent": "center",
+                  },
+                  undefined,
+                ]
+              }
+              testID="icon-trash"
+            >
+              <View
+                color="#FFF"
+                name="trash"
+                size={32}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

@@ -1,0 +1,73 @@
+name: CI # Display name shown in GitHub (Actions tab + PR checks)
+
+on:
+  # Run CI for every Pull Request that targets main (dev -> main, feature -> main, etc.)
+  pull_request:
+    branches: ["main"]
+
+  # Also run CI on every push to dev (catch issues early during development)
+  push:
+    branches: ["dev"]
+
+# ✅ Upgrade 1: Concurrency
+# If you push multiple commits quickly to the same PR/branch, GitHub will cancel the older run
+# and keep only the latest one running. This saves time + GitHub Actions minutes.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    # Use GitHub-hosted Linux runner (fast + usually cheapest in minutes)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Fetch your repository code into the runner
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2) Install Node.js v20 and enable npm dependency caching
+      # cache: "npm" uses package-lock.json to cache dependency downloads
+      - name: Setup Node (20) + npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # 3) Install deps deterministically (uses package-lock.json)
+      - name: Install dependencies (npm ci)
+        run: npm ci
+
+      # 4) Lint
+      - name: Lint
+        run: npm run lint
+
+      # 5) Typecheck (should use your tsconfig.typecheck.json)
+      - name: Typecheck
+        run: npm run typecheck
+
+      # 6) Unit tests in CI mode (stable)
+      - name: Unit tests (CI)
+        run: npm run test:ci
+
+      # 7) Expo sanity checks
+      - name: Expo doctor
+        run: npx expo-doctor@latest
+
+      # 8) Build validation: produces a static web export (useful even if you don't ship web)
+      - name: Build validation (web export)
+        run: npx expo export --platform web
+
+      # ✅ Upgrade 2: Artifacts
+      # Upload useful outputs so you can download them from the CI run:
+      # - The exported web build (dist folder)
+      # - Optional: test results / coverage (if you later generate them)
+      #
+      # NOTE: Expo export output folder can be either "dist" or "web-build" depending on config/version.
+      # If your export output is different, change the path below.
+      - name: Upload web export artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: expo-web-export
+          path: dist
+          if-no-files-found: error

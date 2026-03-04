@@ -1,0 +1,13 @@
+{
+  "entryPoints": ["app", "styles"],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "tsconfig": "./tsconfig.json",
+  "name": "Pic Swipe Wipe API",
+  "includeVersion": true,
+  "exclude": ["**/*.test.ts", "node_modules/**"],
+  "useTsLinkResolution": true,
+  "validation": {
+    "invalidLink": true
+  }
+}
