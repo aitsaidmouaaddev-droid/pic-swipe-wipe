@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ThemeProvider } from "@themes/ThemeContext";
+import ThemeProvider from "@themes/ThemeContext";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import VideoContainer from "./VideoContainer";

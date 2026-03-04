@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Button, Platform, StyleSheet } from "react-native";
-import { ThemeProvider, useTheme } from "@themes/ThemeContext";
+import ThemeProvider, { useTheme } from "../styles/themes/ThemeContext";
 
 /**
  * Composant interne pour basculer le thème (Light/Dark).

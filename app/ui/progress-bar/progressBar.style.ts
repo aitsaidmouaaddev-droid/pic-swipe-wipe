@@ -1,32 +1,64 @@
-import { StyleSheet, ViewStyle } from "react-native";
+import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 import type { StylesOverride, ThemeTokens } from "@themes/theme";
 
 /**
- * Shape structurelle de la barre de progression.
+ * Shape structurelle du composant (uniquement des styles RN valides).
  */
 export type ProgressBarShape = {
-  /** Le conteneur (fond gris par défaut) */
+  // Linear
+  linearWrapper: ViewStyle;
   track: ViewStyle;
-  /** La partie colorée qui progresse */
   fill: ViewStyle;
+  linearLabel: TextStyle;
+
+  // Circular
+  circleWrapper: ViewStyle;
+  circleLabelContainer: ViewStyle;
+  circleLabel: TextStyle;
 };
 
-/**
- * ProgressBar styles factory (theme-aware).
- */
 export default function makeProgressBarStyles(theme: ThemeTokens): ProgressBarShape {
   return StyleSheet.create({
+    // ----- Linear -----
+    linearWrapper: {
+      gap: 6,
+    },
     track: {
       height: 10,
       borderRadius: 999,
       backgroundColor: theme.colors.track,
-      overflow: "hidden", // Crucial pour que le fill respecte l'arrondi du track
+      overflow: "hidden",
     },
     fill: {
       height: "100%",
       borderRadius: 999,
       backgroundColor: theme.colors.primary,
-      // La largeur (width) est omise ici car elle est gérée par les props/animation
+    },
+    linearLabel: {
+      fontSize: 12,
+      opacity: 0.8,
+      color: (theme.colors as any).text ?? theme.colors.primary,
+      alignSelf: "flex-start",
+    },
+
+    // ----- Circular -----
+    circleWrapper: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    circleLabelContainer: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    circleLabel: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: (theme.colors as any).text ?? theme.colors.primary,
     },
   });
 }

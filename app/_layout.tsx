@@ -1,14 +1,14 @@
-import { Slot } from "expo-router";
-import { ThemeProvider } from "@themes/ThemeContext";
-import { View } from "react-native";
-import { Provider } from "react-redux";
 import store from "@store/store";
-import { useEffect } from "react";
-import * as ScreenOrientation from "expo-screen-orientation";
+import ThemeProvider from "@themes/ThemeContext";
 import * as NavigationBar from "expo-navigation-bar";
+import { Slot } from "expo-router";
+import * as ScreenOrientation from "expo-screen-orientation";
 import { StatusBar } from "expo-status-bar";
-import StorybookUI from "../.rnstorybook";
+import { useEffect } from "react";
+import { View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Provider } from "react-redux";
+import StorybookUI from "../.rnstorybook";
 
 /**
  * Root layout and global provider wrapper for the entire application.

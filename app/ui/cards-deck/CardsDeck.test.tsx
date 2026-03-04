@@ -1,8 +1,8 @@
-import React from "react";
 import { render, screen } from "@testing-library/react-native";
-import { View, Text } from "react-native";
+import ThemeProvider from "@themes/ThemeContext";
+import React from "react";
+import { Text, View } from "react-native";
 import CardsDeck from "./CardsDeck";
-import { ThemeProvider } from "@themes/ThemeContext";
 
 /**
  * STRATEGY:
