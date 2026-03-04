@@ -22,9 +22,9 @@
     "test:clean": "jest  --clearCache && jest --watchAll=false",
     "test:clean:u": "jest  --clearCache && jest --watchAll=false -u",
     "test:ci": "jest --ci --runInBand",
-    "storybook-generate": "sb-rn-get-stories",
-    "storybook": "npm run storybook-generate && cross-env EXPO_PUBLIC_STORYBOOK_ENABLED=true expo start --dev-client",
-    "storybook:expo-go": "npm run storybook-generate && expo start",
+    "sb:generate": "sb-rn-get-stories",
+    "sb:dev-client": "npm run sb:generate && cross-env EXPO_PUBLIC_STORYBOOK_ENABLED=true expo start --dev-client",
+    "sb:expo-go": "npm run sb:generate && expo start",
     "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
     "fix": "npm run lint:fix && npm run format"
   },
