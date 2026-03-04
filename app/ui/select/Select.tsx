@@ -120,7 +120,8 @@ export default function Select({
                         if (multiple) {
                           const newValue = Array.isArray(value) ? [...value] : [];
                           const idx = newValue.indexOf(item.value);
-                          idx > -1 ? newValue.splice(idx, 1) : newValue.push(item.value);
+                          if (idx > -1) newValue.splice(idx, 1);
+                          else newValue.push(item.value);
                           onSelect(newValue);
                         } else {
                           onSelect(item.value);

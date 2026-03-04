@@ -5,7 +5,6 @@ import React from "react";
 import { View } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
-import { useTheme } from "@themes/ThemeContext";
 import { VideoPlayerShape } from "./videoPlayer.style";
 
 export interface ProgressBarProps {
@@ -25,7 +24,6 @@ const VideoProgressBar = ({
   onScrubEnd,
   styles,
 }: ProgressBarProps) => {
-  const { theme } = useTheme();
   const [width, setWidth] = React.useState(0);
 
   // Utilisation d'un Pan Gesture configuré pour être réactif

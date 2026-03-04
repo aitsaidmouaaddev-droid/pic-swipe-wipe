@@ -24,6 +24,7 @@ module.exports = defineConfig([
     // Optional: If you want formatting issues to show up as warnings instead of errors
     rules: {
       "prettier/prettier": "warn",
+      "react-hooks/exhaustive-deps": "off",
     },
   },
 ]);

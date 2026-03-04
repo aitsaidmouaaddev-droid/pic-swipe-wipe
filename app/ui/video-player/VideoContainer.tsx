@@ -108,9 +108,10 @@ const VideoContainer = ({
         await player.replaceAsync(uri);
         if (cancelled) return;
         setCurrentTime(0);
-        isActive ? player.play() : player.pause();
+        if (isActive) player.play();
+        else player.pause();
       } catch (e) {
-        /* Erreur ignorée lors du démontage */
+        console.error("Error", e);
       }
     })();
     return () => {
@@ -121,9 +122,10 @@ const VideoContainer = ({
   // Synchronisation de l'état de lecture
   useEffect(() => {
     try {
-      isActive ? player.play() : player.pause();
+      if (isActive) player.play();
+      else player.pause();
     } catch (e) {
-      /* Ignore */
+      console.error("Error", e);
     }
   }, [isActive, player]);
 
@@ -132,7 +134,7 @@ const VideoContainer = ({
     try {
       player.muted = isMuted;
     } catch (e) {
-      /* Ignore */
+      console.error("Error", e);
     }
   }, [isMuted, player]);
 
@@ -153,7 +155,7 @@ const VideoContainer = ({
       try {
         playerRef.current?.release?.();
       } catch (e) {
-        /* Ignore */
+        console.error("Error", e);
       } finally {
         playerRef.current = null;
       }
@@ -173,7 +175,7 @@ const VideoContainer = ({
         triggerFeedback("play");
       }
     } catch (e) {
-      /* Ignore */
+      console.error("Error", e);
     }
   }, [player, triggerFeedback]);
 
@@ -188,7 +190,9 @@ const VideoContainer = ({
     setIsScrubbing(true);
     try {
       player.pause();
-    } catch (e) {}
+    } catch (e) {
+      console.error("Error", e);
+    }
   }, [player]);
 
   const onScrub = useCallback(
@@ -197,7 +201,9 @@ const VideoContainer = ({
       setCurrentTime(target);
       try {
         player.currentTime = target;
-      } catch (e) {}
+      } catch (e) {
+        console.error("Error", e);
+      }
     },
     [duration, player],
   );
@@ -210,7 +216,9 @@ const VideoContainer = ({
       try {
         player.currentTime = target;
         if (isActive) player.play();
-      } catch (e) {}
+      } catch (e) {
+        console.error("Error", e);
+      }
     },
     [duration, isActive, player],
   );

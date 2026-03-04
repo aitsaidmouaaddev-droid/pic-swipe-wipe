@@ -31,7 +31,7 @@ export interface MediaDecisionRow {
   verdict: MediaVerdict;
 }
 
-export const mediaService = {
+const mediaService = {
   /**
    * Enregistre le verdict d'un média dans SQLite.
    * @param id - Identifiant unique du média (MediaStore ID).

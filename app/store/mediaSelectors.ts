@@ -1,35 +1,40 @@
 import type { RootState } from "@store/store";
 
 /**
- * Selects the media list.
+ * Sélectionne la liste des médias du bac "unknown" (à trier).
  */
 export default function selectItems(state: RootState) {
-  return state.mediaScan.items;
+  // ✅ On accède via le bucket "unknown"
+  return state.mediaScan.unknown.items;
 }
 
 /**
- * Selects current cursor.
+ * Sélectionne le curseur actuel du bac "unknown".
  */
 export function selectCursor(state: RootState) {
-  return state.mediaScan.cursor;
+  return state.mediaScan.unknown.cursor;
 }
 
 /**
- * Selects current front item (or undefined if empty).
+ * Sélectionne l'item de devant (index cursor) du bac "unknown".
  */
 export function selectFrontItem(state: RootState) {
-  const items = state.mediaScan.items;
+  const bucket = state.mediaScan.unknown;
+  const items = bucket.items;
   const n = items.length;
+
   if (n === 0) return undefined;
-  return items[state.mediaScan.cursor];
+  return items[bucket.cursor];
 }
 
 /**
- * Selects current back item (or undefined if empty).
+ * Sélectionne l'item de derrière (index cursor + 1) du bac "unknown".
  */
 export function selectBackItem(state: RootState) {
-  const items = state.mediaScan.items;
+  const bucket = state.mediaScan.unknown;
+  const items = bucket.items;
   const n = items.length;
+
   if (n === 0) return undefined;
-  return items[(state.mediaScan.cursor + 1) % n];
+  return items[(bucket.cursor + 1) % n];
 }
