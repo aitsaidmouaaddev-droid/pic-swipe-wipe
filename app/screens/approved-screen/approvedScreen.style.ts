@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet, ViewStyle } from "react-native";
 import { ThemeTokens } from "@themes/theme";
 
 /**
@@ -14,6 +14,26 @@ export default function makeApprovedScreenStyles(theme: ThemeTokens) {
       },
       // ... tes autres styles (deckContainer, card, etc.)
     }),
+
+    overlayContainer: {
+      ...StyleSheet.absoluteFillObject,
+      // We remove horizontal padding here to allow children
+      // to pin exactly to edges if needed
+    } as ViewStyle,
+
+    filterContainer: {
+      position: "absolute" as const,
+      top: Platform.OS === "ios" ? 60 : 40,
+      right: 20,
+      zIndex: 10,
+    } as ViewStyle,
+
+    filterStyles: {
+      borderRadius: 50,
+      width: 54,
+      height: 54,
+      backgroundColor: theme.colors.background + "CC",
+    } as ViewStyle,
 
     // Définition des styles pour les actions de swipe
     actions: {
