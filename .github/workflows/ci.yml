@@ -52,7 +52,7 @@ jobs:
 
       # 7) Expo sanity checks
       - name: Expo doctor
-        run: npx expo doctor
+        run: npx expo-doctor@latest
 
       # 8) Build validation: produces a static web export (useful even if you don't ship web)
       - name: Build validation (web export)
