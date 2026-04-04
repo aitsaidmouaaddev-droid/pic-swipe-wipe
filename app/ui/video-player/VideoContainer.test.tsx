@@ -1,5 +1,5 @@
 import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
-import { ThemeProvider } from "@themes/ThemeContext";
+import ThemeProvider from "@themes/ThemeContext";
 import { useEventListener } from "expo";
 import { createVideoPlayer } from "expo-video";
 import React from "react";

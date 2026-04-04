@@ -1,7 +1,7 @@
+import { fireEvent, render } from "@testing-library/react-native";
+import ThemeProvider from "@themes/ThemeContext";
 import React from "react";
-import { render, fireEvent } from "@testing-library/react-native";
 import Button from "./Button";
-import { ThemeProvider } from "@themes/ThemeContext";
 
 // Wrap helper for Theme
 const renderWithTheme = (ui: React.ReactElement) => {

@@ -30,7 +30,7 @@ export default function LoadingScreen({
   const dispatch = useAppDispatch();
 
   // 1. On extrait 'unknown' au lieu de 'items'
-  const { permission, isScanning, progress, unknown, error } = useAppSelector((s) => s.mediaScan);
+  const { permission, isScanning, unknown, error } = useAppSelector((s) => s.mediaScan);
 
   /**
    * Effet de démarrage unique (Boot Sequence)
@@ -90,7 +90,7 @@ export default function LoadingScreen({
       <Text style={styles.subtitle}>{subtitle}</Text>
 
       <View style={styles.bottom}>
-        <ProgressBar value={progress} />
+        <ProgressBar variant="circular" isInfinite size={64} strokeWidth={6} />
       </View>
 
       {error ? <Text style={styles.error}>{error}</Text> : null}

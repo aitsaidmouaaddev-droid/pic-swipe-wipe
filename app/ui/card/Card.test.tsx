@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text } from "react-native";
 import { render, screen } from "@testing-library/react-native";
+import ThemeProvider from "@themes/ThemeContext";
+import React from "react";
+import { Text, View } from "react-native";
 import Card from "./Card";
-import { ThemeProvider } from "@themes/ThemeContext";
 
 /**
  * Helper to wrap component in ThemeProvider for testing

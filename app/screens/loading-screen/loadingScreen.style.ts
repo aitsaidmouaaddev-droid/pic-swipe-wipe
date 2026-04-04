@@ -27,6 +27,8 @@ export default function makeLoadingScreenStyles(theme: ThemeTokens) {
     bottom: {
       width: "100%",
       marginTop: 16,
+      display: "flex",
+      alignItems: "center",
     },
     error: {
       marginTop: 10,
